@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.zhixin.model">
+
+   <class name="App_pack" table="app_pack">
+
+        <id name="id" column="ID" type="string">
+			<generator class="uuid" />
+		</id>
+		 <property name="path" type="java.lang.String">
+            <column name="Path" />
+        </property>
+       <property name="picname" type="java.lang.String">
+            <column name="PicName" />
+        </property>
+        <property name="context" type="java.lang.String">
+            <column name="Context" />
+        </property>
+        <property name="miaosu" type="java.lang.String">
+            <column name="Miaosu" />
+        </property>
+		
+		
+		
+		  <many-to-one name="factory" class="com.zhixin.model.Doc_Factory"   column="FactoryID" ></many-to-one>
+       
+ 		 
+        
+    </class>
+</hibernate-mapping>

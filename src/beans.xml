@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+						http://www.springframework.org/schema/mvc 
+						http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd 
+						http://www.springframework.org/schema/context 
+						http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+						http://www.springframework.org/schema/aop 
+						http://www.springframework.org/schema/aop/spring-aop-3.0.xsd 
+						http://www.springframework.org/schema/tx 
+						http://www.springframework.org/schema/tx/spring-tx-3.0.xsd ">
+	
+	<!-- 注解驱动 -->
+	<mvc:annotation-driven/>
+	<!-- 组件扫描 -->
+	<context:component-scan base-package="com.zhixin">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+	
+	<bean name="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">   
+    	<property name="dataSource" ref="dataSource"></property>
+ 	</bean>
+	
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">  
+		<property name="locations">  
+			<list>  
+                 <value>/WEB-INF/classes/dbconfig.properties</value>  
+            </list>  
+        </property>  
+	</bean> 
+	
+	<!-- 阿里 druid数据库连接池 -->
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">  
+         <!-- 数据库基本信息配置 -->
+         <property name="url" value="${url}" />  
+         <property name="username" value="${username}" />  
+         <property name="password" value="${password}" />  
+         <property name="driverClassName" value="${driverClassName}" />  
+         <property name="filters" value="${filters}" />  
+   		 <!-- 最大并发连接数 -->
+         <property name="maxActive" value="${maxActive}" />
+         <!-- 初始化连接数量 -->
+         <property name="initialSize" value="${initialSize}" />
+         <!-- 配置获取连接等待超时的时间 -->
+         <property name="maxWait" value="${maxWait}" />
+         <!-- 最小空闲连接数 -->
+         <property name="minIdle" value="${minIdle}" />  
+   		 <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+         <property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis}" />
+         <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+         <property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis}" />  
+         <property name="validationQuery" value="${validationQuery}" />  
+         <property name="testWhileIdle" value="${testWhileIdle}" />  
+         <property name="testOnBorrow" value="${testOnBorrow}" />  
+         <property name="testOnReturn" value="${testOnReturn}" />  
+         <property name="maxOpenPreparedStatements" value="${maxOpenPreparedStatements}" />
+         <!-- 打开removeAbandoned功能 -->
+         <property name="removeAbandoned" value="${removeAbandoned}" />
+         <!-- 1800秒，也就是30分钟 -->
+         <property name="removeAbandonedTimeout" value="${removeAbandonedTimeout}" />
+         <!-- 关闭abanded连接时输出错误日志 -->   
+         <property name="logAbandoned" value="${logAbandoned}" />
+	</bean>  
+	
+	<bean  name="sessionFactory"  id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		
+		<!-- hibernate映射文件的位置 -->
+		<property name="mappingDirectoryLocations">
+			<value>classpath:com/zhixin/model/</value>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.Dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
+				<prop key="hibernate.show_sql">false</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				
+			</props>
+		</property>
+	</bean>
+	
+	<!-- 事务管理器 -->
+	<bean id="txManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<!-- 配置事物的传播特性 (事物通知)-->
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+		<tx:attributes>
+			<tx:method name="save*" propagation="REQUIRED"/>
+			<tx:method name="delete*" propagation="REQUIRED"/>
+			<tx:method name="update*" propagation="REQUIRED"/>
+			<tx:method name="find*" read-only="true"/>
+			<tx:method name="*" read-only="true"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	<aop:config>
+		<aop:advisor pointcut="execution(* com.zhixin.service.*.*(..))" advice-ref="txAdvice"/>
+		<aop:advisor pointcut="execution(* com.zhixin.service.shop.*.*(..))" advice-ref="txAdvice"/>
+		<aop:advisor pointcut="execution(* com.zhixin.service.client.*.*(..))" advice-ref="txAdvice"/>
+	</aop:config>
+	<!-- 項目自定义的Realm -->
+	    <bean id="ShiroRealm" class="com.zhixin.interceptor.shiro.ShiroRealm" ></bean>
+	
+	<!-- ================ Shiro start ================ -->
+		<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+			<property name="realm" ref="ShiroRealm" />
+		</bean>
+		
+		
+		
+		<!-- Shiro Filter -->
+		<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+			<property name="securityManager" ref="securityManager" />
+			
+			 <property name="loginUrl" value="/" />  
+			
+			<property name="successUrl" value="/main/index" />
+			
+			<!-- <property name="unauthorizedUrl" value="/login_toLogin" />
+			 -->
+			
+			<property name="unauthorizedUrl" value="/sys" />
+			
+			
+			<property name="filterChainDefinitions">
+				<value>
+				/staticphone/**/** 		= anon
+	           	/staticphone/fonts/** 	= anon
+	           	/staticphone/images/** 	= anon
+	           	/staticphone/images/**/** 	= anon
+	           	/staticphone/scripts/** 	= anon
+	           	/staticphone/style/** 	= anon
+				/uploadFiles/uploadImgs/** 	= anon 
+				/uploadFiles/twoDimensionCode/** 	= anon 
+				/static/login/** 	= anon
+				/static/js/myjs/** 	= authc
+				/static/js/** 		= anon
+	           	/code.do 			= anon
+	           	/login_login	 	= anon
+	           		<!-- 系统 -->
+	           	/sys	 	= anon
+	           		<!-- 系统 -->
+	           	/app**/** 			= anon
+	           	/weixin/** 			= anon
+	           	/wxorder/**     = anon
+	           	/wxuser/**			= anon
+	           	/ws/**			= anon
+	           	/apppicture/getapppicture = anon
+	           	/appactivity/getappactivity = anon
+	           	/apppack/getappack = anon              
+	           	/appbook/book = anon  
+	         	/static/**/** 		= anon
+	         	
+	         	
+	         	/shop/**/** 		= anon
+	         	/shop_login/**   = anon
+	         	/shop/process   = anon
+	         	/shop/edit_pwd   = anon
+	         	/shop/find_code   = anon
+	         	/shop/save_pwd   = anon
+	         	/shop/place_order = anon
+	         	/tologin/**		= anon   
+	         	/tool/go_query  = anon
+	         	/tool/go_car  = anon
+	         	/tool/query_code  = anon
+	         	/tool/query_car  = anon
+	         	/clientIndex/index  = anon
+	         	/clientIndex/news_back  = anon
+	         	/clientUser/login  = anon 
+	         	/clientUser/page_order  = anon  
+	         	/clientUser/client_list  = anon 
+	         	/clientUser/driver_list  = anon
+	         	/clientUser/saveDriver  = anon
+	         	clientUser/updateDriver   = anon
+	         	clientUser/updateDriver1   = anon
+	         	
+	         	clientUser/delDriver        = anon
+	         	/clientOrder/order_list  = anon 
+	         	/clientIndex/news_list  = anon
+	         	/clientIndex/news_ByID  = anon
+	         	/clientIndex/picture_list  = anon
+	         	/clientIndex/carousel  = anon
+	         	/clientIndex/touser  = anon
+	         	/clientIndex/*  = anon
+	         	/clientOrder/*  = anon 
+	         	/clientUser/*  = anon  
+	           	/**					= authc 
+				</value>
+			</property>
+		</bean>
+	<!-- ================ Shiro end ================ -->
+	
+	
+	
+	
+	
+	
+	 <bean id="shiroShopFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+			<property name="securityManager" ref="securityManager" />
+			
+			 <property name="loginUrl" value="/shop/login_toLogin" /> 
+			
+			<property name="successUrl" value="/shop" />
+			
+			<property name="unauthorizedUrl" value="/shop/login_toLogin" />
+			
+			<property name="filterChainDefinitions">
+				<value>
+				/staticphone/**/** 		= anon
+	           	/staticphone/fonts/** 	= anon
+	           	/staticphone/images/** 	= anon
+	           	/staticphone/images/**/** 	= anon
+	           	/staticphone/scripts/** 	= anon
+	           	/staticphone/style/** 	= anon
+				/uploadFiles/uploadImgs/** 	= anon 
+				/uploadFiles/twoDimensionCode/** 	= anon 
+				/static/login/** 	= anon
+				/static/js/myjs/** 	= authc
+				/static/js/** 		= anon
+				/static/shop/assets/**/**		= anon
+	           	/login_login	 	=     anon
+	           	 	 <!-- 系统 -->
+	           	/sys	 	=          anon
+	           		 <!-- 系统 -->
+	           	/app**/** 			= anon
+	           	/weixin/** 			= anon
+	           	/wxorder/**     = anon
+	           	/wxuser/**			= anon
+	           	/ws/**			= anon
+	           	/apppicture/getapppicture = anon
+	           	/appactivity/getappactivity = anon
+	           	/apppack/getappack = anon              
+	           	/appbook/book = anon  
+	         	/static/**/** 		= anon
+	         	
+	         	/shop			   = anon
+	         	/shop/shop_login   = anon
+	         	/shop/process   = anon
+	         	/shop/edit_pwd   = anon
+	         	/shop/find_code   = anon
+	         	/shop/save_pwd   = anon
+	         	/shop/place_order = anon
+	         	
+	         	/tool/go_query  = anon
+	         	/tool/go_car  = anon
+	         	/tool/query_code  = anon
+	         	/tool/query_car  = anon
+	         	/clientUser/index  = anon
+	         	/clientUser/client_list  = anon 
+	         	/clientIndex/news_back  = anon
+	         	/clientUser/driver_list  = anon
+	         	/clientUser/saveDriver  = anon
+	         	clientUser/updateDriver   = anon
+	         	clientUser/updateDriver1   = anon
+	         	clientUser/delDriver        = anon
+	         	/clientIndex/login  = anon
+	         	/clientUser/page_order  = anon
+	         	/clientOrder/order_list  = anon   
+	         	/clientIndex/news_list  = anon
+	         	/clientIndex/news_ByID  = anon
+	         	/clientIndex/picture_list  = anon
+	         	/clientIndex/carousel  = anon
+	         	/clientIndex/touser  = anon
+	         	/clientIndex/*  = anon
+	         	/clientOrder/*  = anon 
+	         	/clientUser/*  = anon  
+	         	/tologin/**		= anon 
+	           	/**					= authc 
+				</value>
+			</property>
+		</bean>
+	<!-- app 客户过滤器 -->
+	<bean id="shiroClientFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+			<property name="securityManager" ref="securityManager" />
+			
+			 <property name="loginUrl" value="/shop/login_toLogin" /> 
+			
+			<property name="successUrl" value="/shop" />
+			
+			<property name="unauthorizedUrl" value="/shop/login_toLogin" />
+			
+			<property name="filterChainDefinitions">
+				<value>
+				/staticphone/**/** 		= anon
+	           	/staticphone/fonts/** 	= anon
+	           	/staticphone/images/** 	= anon
+	           	/staticphone/images/**/** 	= anon
+	           	/staticphone/scripts/** 	= anon
+	           	/staticphone/style/** 	= anon
+				/uploadFiles/uploadImgs/** 	= anon 
+				/uploadFiles/twoDimensionCode/** 	= anon 
+				/static/login/** 	= anon
+				/static/js/myjs/** 	= authc
+				/static/js/** 		= anon
+				/static/shop/assets/**/**		= anon
+	           	/login_login	 	=     anon
+	           	 	 <!-- 系统 -->
+	           	/sys	 	=          anon
+	           		 <!-- 系统 -->
+	           	/app**/** 			= anon
+	           	/weixin/** 			= anon
+	           	/wxorder/**     = anon
+	           	/wxuser/**			= anon
+	           	/ws/**			= anon
+	           	/apppicture/getapppicture = anon
+	           	/appactivity/getappactivity = anon
+	           	/apppack/getappack = anon              
+	           	/appbook/book = anon  
+	         	/static/**/** 		= anon
+	         	
+	         	/shop			   = anon
+	         	/shop/shop_login   = anon
+	         	/shop/process   = anon
+	         	/shop/edit_pwd   = anon
+	         	/shop/find_code   = anon
+	         	/shop/save_pwd   = anon
+	         	/shop/place_order = anon
+	         	/tool/go_query  = anon
+	         	/tool/go_car  = anon
+	         	/tool/query_code  = anon
+	         	/tool/query_car  = anon
+	         	/clientIndex/index  = anon
+	         	/clientIndex/news_back  = anon
+	         	/clientUser/login  = anon
+	         	/clientUser/page_order  = anon
+	         	/clientUser/driver_list  = anon
+	         	/clientUser/client_list  = anon 
+	         	/clientUser/saveDriver  = anon
+	         	clientUser/updateDriver   = anon
+	         	clientUser/updateDriver1   = anon
+	         	clientUser/delDriver        = anon
+	         	clientUser/logout        = anon
+	         	/clientOrder/order_list  = anon   
+	         	/clientIndex/news_list  = anon
+	         	/clientIndex/news_ByID  = anon
+	         	/clientIndex/picture_list  = anon
+	         	/clientIndex/picture_list  = anon
+	         	/clientIndex/carousel  = anon
+	         	/clientIndex/touser  = anon
+	         	/clientIndex/*  = anon
+	         	/clientOrder/*  = anon 
+	         	/clientUser/*  = anon  
+	         	/tologin/**		= anon 
+	           	/**					= authc 
+				</value>
+			</property>
+		</bean>
+	
+	
+	
+	
+	
+	
+</beans>

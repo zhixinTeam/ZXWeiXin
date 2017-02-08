@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="com.zhixin.model.Shop_Type" table="shop_Type">
+    
+        <id name="t_id" column="T_ID" type="string">
+			<generator class="uuid" />
+		</id>
+        
+        <property name="typename" type="java.lang.String">
+            <column name="TypeName" />
+        </property>
+        
+        <set name="shopgoods"   table="Shop_Goods" inverse="true" >
+        	<!-- 执行多的表中的外键列的名字 -->
+        	<key column="TypeID"></key>
+        	<!--指定映射类型  -->
+        	<one-to-many class="com.zhixin.model.Shop_Goods"/>
+        </set> 
+        <many-to-one name="doc_factory" class="com.zhixin.model.Doc_Factory"   lazy="false" update="false"  cascade="all"   column="FactoryID"></many-to-one>
+   
+         </class>
+</hibernate-mapping>

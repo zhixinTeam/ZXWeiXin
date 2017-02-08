@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="com.zhixin.model.Wx_BindUser" table="wx_binduser">
+        
+        <id name="id" column="ID" type="string">
+			<generator class="uuid" />
+		</id>
+        
+        <property name="openid" type="java.lang.String">
+            <column name="Openid" />
+        </property>
+       
+        
+        <property name="binddate" type="java.sql.Timestamp">
+            <column name="BindDate" />
+        </property>  
+        <property name="originalID" type="java.lang.String">
+            <column name="OriginalID" />
+        </property>
+        
+         <many-to-one name="factory" class="com.zhixin.model.Doc_Factory"   lazy="false" update="false"  cascade="all"   column="FactoryID"></many-to-one>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="com.zhixin.model.Shop_Driver" table="shop_driver">
+    
+        <id name="d_id" column="D_ID" type="string">
+			<generator class="uuid" />
+		</id>
+        
+        <property name="name" type="java.lang.String">
+            <column name="Name" />
+        </property>
+        <property name="tracknumber" type="java.lang.String">
+            <column name="TrackNumber" />
+        </property>
+        <property name="idnumber" type="java.lang.String">
+            <column name="IDNumber" />
+        </property>
+        <property name="phone" type="java.lang.String">
+            <column name="Phone" />
+        </property>
+       
+       <set name="shoplinkuserdrivers"   table="shopLink_user_driver" inverse="true" >
+        	<!-- 执行多的表中的外键列的名字 -->
+        	<key column="DriverID"></key>
+        	<!--指定映射类型  -->
+        	<one-to-many class="com.zhixin.model.ShopLink_User_Driver"/>
+        </set> 
+        
+       <set name="shoporders"   table="shop_order" inverse="true" >
+        	<!-- 执行多的表中的外键列的名字 -->
+        	<key column="DriverID"></key>
+        	<!--指定映射类型  -->
+        	<one-to-many class="com.zhixin.model.Shop_Order"/>
+        </set> 
+         </class>
+</hibernate-mapping>

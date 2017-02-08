@@ -1,0 +1,17 @@
+package com.zhixin.test;
+
+import java.util.Calendar;
+import java.util.Date;
+
+import com.zhixin.right_utils.Logger;
+
+public class TestLog4J {  
+    public static void main(String[] args) {  
+        Logger logger = Logger.getLogger(TestLog4J.class);  
+        logger.info("zhujiadun"); 
+    	
+    	
+    } 
+    
+    
+}

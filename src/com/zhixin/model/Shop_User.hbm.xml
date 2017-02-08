@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="com.zhixin.model.Shop_User" table="shop_user">
+        
+        <!-- <cahce usage="read"/> -->
+        
+        <id name="u_id" column="U_ID" type="string">
+			<generator class="uuid" />
+		</id>
+        
+        <property name="username" type="java.lang.String">
+            <column name="UserName" />
+        </property>
+        <property name="password" type="java.lang.String">
+            <column name="Password" />
+        </property>
+        <property name="createdate" type="java.sql.Timestamp">
+            <column name="Createdate" />
+        </property>
+        <property name="last_login" type="java.lang.String">
+            <column name="Last_Login" />
+        </property>
+        
+        <property name="ip" type="java.lang.String">
+            <column name="IP" />
+        </property>
+        
+        <property name="openID" type="java.lang.String">
+            <column name="openID" />
+        </property>
+        
+       <set name="shoplinkuserdrivers"   table="shoplink_user_driver" inverse="true" lazy="false">
+        	<!-- 执行多的表中的外键列的名字 -->
+        	<key column="UserID"></key>
+        	<!--指定映射类型  -->
+        	<one-to-many class="com.zhixin.model.ShopLink_User_Driver"/>
+        </set> 
+        
+        <set name="shopclients"   table="shop_client" inverse="true" lazy="false">
+        	<!-- 执行多的表中的外键列的名字 -->
+        	<key column="UserID"></key>
+        	<!--指定映射类型  -->
+        	<one-to-many class="com.zhixin.model.Shop_Client"/>
+        </set> 
+        
+        <set name="shoporders"   table="shop_order" inverse="true" >
+        	<!-- 执行多的表中的外键列的名字 -->
+        	<key column="UserID"></key>
+        	<!--指定映射类型  -->
+        	<one-to-many class="com.zhixin.model.Shop_Order"/>
+        </set> 
+        
+        
+       <many-to-one name="doc_factory" class="com.zhixin.model.Doc_Factory"   lazy="false" update="false"  cascade="all"   column="FactoryID"></many-to-one>
+   
+        
+         </class>
+</hibernate-mapping>

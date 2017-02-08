@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.zhixin.model">
+
+    <class name="Doc_Factory" table="doc_factory">
+
+        <id name="id" column="ID" type="string">
+			<generator class="uuid" />
+		</id>
+		<property name="factoryname" type="java.lang.String">
+            <column name="FactoryName" />
+        </property>
+		<property name="serviceurl" type="java.lang.String">
+            <column name="ServiceUrl" />
+        </property>
+        <property name="serviceparam" type="java.lang.String">
+            <column name="ServiceParam" />
+        </property>
+        <property name="startdate" type="java.sql.Date">
+            <column name="StartDate" />
+        </property>
+        <property name="enddate" type="java.sql.Date">
+            <column name="EndDate" />
+        </property>
+        <property name="status" type="java.lang.Integer">
+            <column name="Status" />
+        </property>
+        <property name="orgcode" type="java.lang.String">
+            <column name="OrgCode" />
+        </property>
+        <property name="createdate" type="java.sql.Timestamp">
+            <column name="CreateDate" />
+        </property>
+       
+       <property name="editlog" type="java.lang.String">
+            <column name="EditLog" />
+        </property>
+        
+        <!-- <property name="ipurl" type="java.lang.String">
+            <column name="IpUrl" />
+        </property> -->
+		<!-- 
+			映射多对一的关联关系。 使用 many-to-one 来映射多对一的关联关系 
+			name: 多这一端关联的一那一端的属性的名字
+			class: 一那一端的属性对应的类名
+			column: 一那一端在多的一端对应的数据表中的外键的名字
+		-->
+		
+		 <many-to-one name="doc_company" class="com.zhixin.model.Doc_Company" lazy="false" column="CompanyID"></many-to-one>
+ 		
+ 		
+ 		 <set name="sys_users"  cascade="all"  table="sys_user"  lazy="false" inverse="true" >
+        	<!-- 执行多的表中的外键列的名字 -->
+        	<key column="FactoryID"></key>
+        	<!--指定映射类型  -->
+        	<one-to-many class="com.zhixin.model.Sys_User"/>
+        </set>  
+        <!--  <set name="shopclients"  cascade="all"  table="Shop_Client"  lazy="false" inverse="true" >
+        	执行多的表中的外键列的名字
+        	<key column="FactoryID"></key>
+        	指定映射类型 
+        	<one-to-many class="com.zhixin.model.Shop_Client"/>
+        </set>   -->
+        <set name="shopusers"  cascade="all"  table="shop_user"  lazy="false" inverse="true" >
+        	<!-- 执行多的表中的外键列的名字 -->
+        	<key column="FactoryID"></key>
+        	<!--指定映射类型  -->
+        	<one-to-many class="com.zhixin.model.Shop_User"/>
+        </set>  
+        <set name="shoporders"  cascade="all"  table="Shop_Order"   inverse="true" >
+        	<!-- 执行多的表中的外键列的名字 -->
+        	<key column="FactoryID"></key>
+        	<!--指定映射类型  -->
+        	<one-to-many class="com.zhixin.model.Shop_Order"/>
+        </set>  
+        
+        <set name="shopgoods"  cascade="all"  table="Shop_Goods"  lazy="false" inverse="true" >
+        	<!-- 执行多的表中的外键列的名字 -->
+        	<key column="FactoryID"></key>
+        	<!--指定映射类型  -->
+        	<one-to-many class="com.zhixin.model.Shop_Goods"/>
+        </set> 
+        
+         
+        
+         <set name="sys_roles"  cascade="save-update" table="sys_role" inverse="true" >
+        	<!-- 执行多的表中的外键列的名字 -->
+        	<key column="FactoryID"></key>
+        	<!--指定映射类型  -->
+        	<one-to-many class="com.zhixin.model.Sys_Role"/>
+        </set>  
+        
+        
+        <set name="sys_pictures"  cascade="save-update" table="sys_picture" inverse="true" >
+        	<!-- 执行多的表中的外键列的名字 -->
+        	<key column="FactoryID"></key>
+        	<!--指定映射类型  -->
+        	<one-to-many class="com.zhixin.model.Sys_Picture"/>
+        </set>  
+        
+        <!-- 使用 many-to-one 的方式来映射 1-1 关联关系 -->
+		<many-to-one name="user" class="com.zhixin.model.Sys_User" 
+			column="User_ID" unique="true"></many-to-one>
+        
+			
+         
+        
+        <set name="bindcustomer_factorys"  cascade="save-update" table="link_bindCustomers_factorys" inverse="true" >
+        	<!-- 执行多的表中的外键列的名字 -->
+        	<key column="FactoryID"></key>
+        	<!--指定映射类型  -->
+        	<one-to-many class="com.zhixin.model.Link_BindCustomers_Factorys"/>
+        </set> 
+        
+        <!-- 工厂对应app的关联 -->
+        
+         <set name="app_activitys" cascade="save-update" inverse="true"   order-by="id">
+        	<!-- 执行多的表中的外键列的名字 -->
+        	<key column="FactoryID"></key>
+        	<!-- 指定映射类型 -->
+        	<one-to-many class="com.zhixin.model.App_activity"/>
+        </set>
+        
+         <set name="app_packs" cascade="save-update" inverse="true"   order-by="id">
+        	<!-- 执行多的表中的外键列的名字 -->
+        	<key column="FactoryID"></key>
+        	<!-- 指定映射类型 -->
+        	<one-to-many class="com.zhixin.model.App_pack"/>
+        </set>
+        
+        <set name="app_pictures" cascade="save-update" inverse="true"   order-by="id">
+        	<!-- 执行多的表中的外键列的名字 -->
+        	<key column="FactoryID"></key>
+        	<!-- 指定映射类型 -->
+        	<one-to-many class="com.zhixin.model.App_picture"/>
+        </set>
+    </class>
+</hibernate-mapping>

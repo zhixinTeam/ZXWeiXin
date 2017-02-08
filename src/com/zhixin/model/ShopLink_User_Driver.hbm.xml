@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="com.zhixin.model.ShopLink_User_Driver" table="shoplink_user_driver">
+    
+        <id name="l_id" column="L_ID" type="string">
+			<generator class="uuid" />
+		</id>
+       
+      	 <many-to-one name="shopuser" lazy="false" class="com.zhixin.model.Shop_User" 
+			column="UserID"  cascade="all" ></many-to-one>
+         
+          
+         <many-to-one name="shopdriver" lazy="false" class="com.zhixin.model.Shop_Driver" 
+			column="DriverID"  cascade="all" ></many-to-one>
+       
+         </class>
+</hibernate-mapping>

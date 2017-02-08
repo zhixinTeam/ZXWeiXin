@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="com.zhixin.model.Sys_Picture" table="sys_picture">
+        
+        <id name="id" column="ID" type="string">
+			<generator class="uuid" />
+		</id>
+        
+        <property name="title" type="java.lang.String">
+            <column name="title" />
+        </property>
+        <property name="name" type="java.lang.String">
+            <column name="name" />
+        </property>
+        
+       
+         <property name="path" type="java.lang.String">
+            <column name="path" />
+        </property>
+        <property name="createdate" type="java.sql.Timestamp">
+            <column name="CreateDate" />
+        </property>
+         <property name="bz" type="java.lang.String">
+            <column name="bz" />
+        </property>
+          <property name="flag" type="java.lang.Integer">
+            <column name="flag" />
+        </property>
+        
+         <many-to-one name="doc_factory" class="com.zhixin.model.Doc_Factory" column="FactoryID"></many-to-one>
+         
+         
+         
+         </class>
+</hibernate-mapping>

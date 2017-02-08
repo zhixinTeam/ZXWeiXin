@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>wxplatform</display-name>
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>classpath:beans*.xml</param-value>
+  </context-param>
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  <servlet>
+    <servlet-name>action</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>classpath:springmvc.xml</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>action</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+  <!-- 跨域start -->
+      <filter>  
+        <filter-name>CORS</filter-name>  
+        <filter-class>com.thetransactioncompany.cors.CORSFilter</filter-class>  
+        <init-param>  
+         <param-name>cors.allowOrigin</param-name>  
+            <param-value>*</param-value>  
+        </init-param>  
+        <init-param>  
+         <param-name>cors.supportedMethods</param-name>  
+            <param-value>GET, POST, HEAD, PUT, DELETE</param-value>  
+        </init-param>  
+        <init-param>  
+         <param-name>cors.supportedHeaders</param-name>  
+            <param-value>Accept, Origin, X-Requested-With, Content-Type, Last-Modified</param-value>  
+        </init-param>  
+        <init-param>  
+            <param-name>cors.exposedHeaders</param-name>  
+            <param-value>Set-Cookie</param-value>  
+        </init-param>  
+        <init-param>  
+            <param-name>cors.supportsCredentials</param-name>  
+            <param-value>true</param-value>  
+        </init-param>  
+    </filter>  
+    <filter-mapping>  
+        <filter-name>CORS</filter-name>  
+        <url-pattern>/*</url-pattern>  
+    </filter-mapping>  
+  <!-- 跨域end -->
+  <filter>
+    <filter-name>Set Character Encoding</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>utf8</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>Set Character Encoding</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <!-- 连接池 启用Web监控统计功能   start-->
+	<filter>
+		<filter-name>DruidWebStatFilter</filter-name>
+		<filter-class>com.alibaba.druid.support.http.WebStatFilter</filter-class>
+		<init-param>
+			<param-name>exclusions</param-name>
+			<param-value>*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>DruidWebStatFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<servlet>
+		<servlet-name>DruidStatView</servlet-name>
+		<servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DruidStatView</servlet-name>
+		<url-pattern>/druid/*</url-pattern>
+	</servlet-mapping>
+	<!-- 连接池 启用Web监控统计功能   end-->
+	
+	 
+  <!-- start listener -->
+   
+
+
+
+    <listener>
+ <listener-class>com.zhixin.listener.SendMsgManagerListener</listener-class>
+</listener>  
+ <listener>
+ <listener-class>com.zhixin.listener.TokenManagerListener</listener-class>
+</listener>  
+<listener>
+<listener-class>com.zhixin.listener.TicketManagerListener</listener-class>
+</listener> 
+ 
+ <!-- <context-param>  
+    <param-name>webAppRootKey</param-name>  
+    <param-value>webApp.root</param-value>  
+  </context-param>  
+ <context-param>  
+  <param-name>log4jConfigLocation</param-name>  
+    <param-value>classpath:log4j.properties</param-value>  
+ </context-param> 
+<listener>
+		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+	</listener>  -->
+  <!-- end listener -->
+  
+  
+  
+ 
+  
+  
+  
+  <filter>
+    <filter-name>shiroFilter</filter-name>
+    <filter-class>
+			org.springframework.web.filter.DelegatingFilterProxy
+		</filter-class>
+    <init-param>
+      <param-name>targetFilterLifecycle</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>shiroFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+  
+    <filter>
+    <filter-name>shiroShopFilter</filter-name>
+    <filter-class>
+			org.springframework.web.filter.DelegatingFilterProxy
+		</filter-class>
+    <init-param>
+      <param-name>targetFilterLifecycle</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>shiroShopFilter</filter-name>
+    <url-pattern>/shop/*</url-pattern>
+  </filter-mapping>
+  
+   <!-- 
+   		所有请求都会先经过cxf框架
+    -->
+     <servlet>
+      <servlet-name>CXFServlet</servlet-name>
+      <servlet-class>
+         org.apache.cxf.transport.servlet.CXFServlet
+      </servlet-class>
+      <load-on-startup>1</load-on-startup>
+   </servlet>
+   <servlet-mapping>
+      <servlet-name>CXFServlet</servlet-name>
+      <url-pattern>/ws/*</url-pattern>
+    </servlet-mapping>    
+    
+  
+   <error-page>
+		<error-code>404</error-code>
+		<location>/404.jsp</location>
+	</error-page> 
+  
+  <session-config>
+		<session-timeout>60</session-timeout>
+	</session-config>  
+</web-app>

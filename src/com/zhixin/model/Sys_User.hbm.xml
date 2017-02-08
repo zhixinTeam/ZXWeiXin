@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="com.zhixin.model.Sys_User" table="sys_user">
+        
+        <!-- <cahce usage="read"/> -->
+        
+        <id name="id" column="ID" type="string">
+			<generator class="uuid" />
+		</id>
+        
+        <property name="username" type="java.lang.String">
+            <column name="UserName" />
+        </property>
+        <property name="password" type="java.lang.String">
+            <column name="PassWord" />
+        </property>
+        <property name="truename" type="java.lang.String">
+            <column name="TrueName" />
+        </property>
+        <property name="mobile" type="java.lang.String">
+            <column name="Mobile" />
+        </property>
+        <!-- <property name="createid" type="java.lang.String">
+            <column name="CreateID" />
+        </property> -->
+        
+        <property name="createdate" type="java.sql.Timestamp">
+            <column name="CreateDate" />
+        </property>
+        <property name="status" type="java.lang.Integer">
+            <column name="Status" />
+        </property>
+        <property name="isonline" type="java.lang.Integer">
+            <column name="IsOnline" />
+        </property>
+        
+        <property name="email" type="java.lang.String">
+            <column name="Email" />
+        </property>
+        <property name="susernumber" type="java.lang.String">
+            <column name="SuserNumber" />
+        </property>
+        <property name="bz" type="java.lang.String">
+            <column name="BZ" />
+        </property>
+        
+        <property name="last_login" type="java.lang.String">
+            <column name="Last_Login" />
+        </property>
+        
+        <property name="ip" type="java.lang.String">
+            <column name="IP" />
+        </property>
+        <many-to-one name="parent" class="com.zhixin.model.Sys_User" column="CreateID" update="false" ></many-to-one>
+        
+        <set name="children"  inverse="true" lazy="false" order-by="UserName DESC" >
+        	<!-- 执行多的表中的外键列的名字 -->
+        	<key column="CreateID"></key>
+        	<!-- 指定映射类型 -->
+        	<one-to-many class="com.zhixin.model.Sys_User"/>
+        </set>
+        
+         <many-to-one name="sys_role" class="com.zhixin.model.Sys_Role"  column="RoleID" update="true" cascade="all" ></many-to-one>
+        <many-to-one name="doc_factory" class="com.zhixin.model.Doc_Factory"   lazy="false" update="false"  cascade="all"   column="FactoryID"></many-to-one>
+   
+         <one-to-one name="adminfactory" 
+        	class="com.zhixin.model.Doc_Factory"
+        	property-ref="user"></one-to-one>  
+         </class>
+</hibernate-mapping>

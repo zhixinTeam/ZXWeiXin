@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration PUBLIC "-//APACHE//DTD LOG4J 1.2//EN" "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+	<!-- Appenders -->
+	<appender name="activexAppender" class="org.apache.log4j.DailyRollingFileAppender">  
+        <param name="File" value="E:/activex.log" />   
+        <param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />   
+        <layout class="org.apache.log4j.PatternLayout">  
+         <param name="ConversionPattern"   
+            value="[%d{MMdd HH:mm:ss SSS\} %-5p] [%t] %c{3\} - %m%n" />  
+        </layout>   
+    </appender>  
+	
+	<!-- Application Loggers -->
+	<logger name="com.zhixin">
+		<level value="info" />
+	</logger>
+	
+	<!-- 3rdparty Loggers -->
+	<logger name="org.springframework.core">
+		<level value="info" />
+	</logger>	
+	
+	<logger name="org.springframework.beans">
+		<level value="info" />
+	</logger>
+	
+	<logger name="org.springframework.context">
+		<level value="info" />
+	</logger>
+
+	<logger name="org.springframework.web">
+		<level value="info" />
+	</logger>
+
+	<logger name="org.springframework.jdbc">
+		<level value="info" />
+	</logger>
+
+	<logger name="org.mybatis.spring">
+		<level value="info" />
+	</logger>
+	<logger name="java.sql">
+		<level value="info" />
+	</logger>
+	<!-- Root Logger -->
+	<root>
+		<priority value="info" />
+		<appender-ref ref="console" />
+	</root>
+	
+</log4j:configuration>

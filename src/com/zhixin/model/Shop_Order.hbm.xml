@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="com.zhixin.model.Shop_Order" table="shop_order">
+    
+        <id name="o_id" column="O_ID" type="string">
+			<generator class="uuid" />
+		</id>
+        
+        <property name="ordernumber" type="java.lang.String">
+            <column name="OrderNumber" />
+        </property>
+        <property name="orderdate" type="java.sql.Timestamp">
+            <column name="Orderdate" />
+        </property>
+       <property name="data" type="java.lang.String">
+            <column name="Data" />
+        </property>
+        <property name="status" type="java.lang.Integer">
+            <column name="Status" />
+        </property>
+         <property name="idnumber" type="java.lang.String">
+            <column name="IDNumber" />
+        </property>
+         <property name="thdate" type="java.lang.String">
+            <column name="thdate" />
+        </property>
+        <property name="fac_order_no" type="java.lang.String">
+            <column name="fac_order_no" />
+        </property>
+        
+       <many-to-one name="shopuser" class="com.zhixin.model.Shop_User" 
+			column="UserID"  cascade="all"></many-to-one>
+       
+       <many-to-one name="shopdriver" class="com.zhixin.model.Shop_Driver" 
+			column="DriverID" lazy="false"  cascade="all"></many-to-one>
+       
+       <many-to-one name="shopgoods" class="com.zhixin.model.Shop_Goods" 
+			column="goodsID" lazy="false"  cascade="all"></many-to-one>
+			
+		<many-to-one name="shopclient" class="com.zhixin.model.Shop_Client" 
+			column="clientID" lazy="false"  cascade="all"></many-to-one>
+				
+	  <many-to-one name="doc_factory" class="com.zhixin.model.Doc_Factory"  lazy="false"  cascade="all"   column="FactoryID"></many-to-one>
+   
+         </class>
+</hibernate-mapping>

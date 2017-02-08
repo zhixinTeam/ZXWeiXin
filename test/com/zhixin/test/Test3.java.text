@@ -1,0 +1,30 @@
+package com.zhixin.test;
+
+
+
+import com.zhixin.tools.Base64Utils;
+import com.zhixin.tools.TimestampUtil;
+
+import weixin.popular.api.TokenAPI;
+
+public class Test3 {
+
+	public static void main(String args[]){
+		String appid="wx80d32387cee6c540";
+		String secret ="469846fabb60680236fe86e6413900cd";
+		//String access_token ="-k6FERoGKYhLIZjK2I82KQFl-5Dph8bwbY_3448KpaW469FD-d73a3JkzbVzCbSKTCuP33UPs30YL4kKyRzwM-TXTlYUSp7JbwaRhIlbQVfp_5V4BnSBKO9XJSxgG1pQCIJfABAWCD";
+		String access_token=TokenAPI.token(appid, secret).getAccess_token();
+		//String access_token=TokenManager.getToken(appid);
+		System.out.println(access_token);
+		
+		System.out.println(TimestampUtil.getnowtime().toString().replace("-", "").substring(0, 8));
+		/*String key =Base64Utils.getBase64("hi big bug #123");
+		
+		System.out.println(key);
+		
+		System.out.println(Base64Utils.getFromBase64(key));*/
+		
+		
+		
+	}
+}

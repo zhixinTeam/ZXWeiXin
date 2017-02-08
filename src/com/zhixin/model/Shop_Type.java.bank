@@ -1,0 +1,62 @@
+package com.zhixin.model;
+
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+
+public class Shop_Type implements Serializable{
+
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6751935919255558563L;
+
+	private String t_id;
+	
+	private String typename;
+	
+	private  Doc_Factory doc_factory ;
+	
+	private Set<Shop_Goods> shopgoods = new HashSet<>();
+
+	public String getT_id() {
+		return t_id;
+	}
+
+	public void setT_id(String t_id) {
+		this.t_id = t_id;
+	}
+
+	public String getTypename() {
+		return typename;
+	}
+
+	public void setTypename(String typename) {
+		this.typename = typename;
+	}
+
+	public Set<Shop_Goods> getShopgoods() {
+		return shopgoods;
+	}
+
+	public void setShopgoods(Set<Shop_Goods> shopgoods) {
+		this.shopgoods = shopgoods;
+	}
+
+	public Doc_Factory getDoc_factory() {
+		return doc_factory;
+	}
+
+	public void setDoc_factory(Doc_Factory doc_factory) {
+		this.doc_factory = doc_factory;
+	}
+
+	
+	
+	
+	
+	
+	
+	
+}

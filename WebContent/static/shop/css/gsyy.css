@@ -1,0 +1,312 @@
+﻿*{
+	padding: 0;
+	margin: 0;
+	
+}
+img {
+	max-width: 100%;
+	display: block;
+}
+.clearfix:after{
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+	
+}
+
+.navbar-default{
+	background-color:#92b6fc !important;
+}
+#bs-example-navbar-collapse-1 a{
+	display: block;
+   font-size: 20px;
+  margin:  0 10px;
+  color: white;
+  text-shadow: 1px 1px 1px #444;
+}
+#bs-example-navbar-collapse-1 a:hover{
+	background-color:rgba(255,255,255,0.3);
+	color: black;
+}
+  #logo{
+	margin-top: -20px;
+}
+
+
+#gsjj{
+	position: relative;
+	top: -15px;
+}
+
+	
+
+#gsjj_cen{
+	position: relative;
+	top: -15px;
+	width: 100%;		
+	background: #EBEBEB;
+	height: 470px;
+	margin: 10px auto;
+	box-sizing: border-box;
+}
+
+.gsjj_a{
+	width: 100%;
+	height: 460px;
+	
+	
+}
+.gsjj_a figure{
+	width: 100%;	
+	padding: 10px 0;
+	
+	
+}
+.gsjj_a .png{
+	display: block;
+	width:45%;
+	float: left;	
+	position: relative;
+	overflow: hidden;
+	
+	
+}
+.gsjj_a .png img{
+	width: 100% !important;
+	height: 452px;
+	padding: 0 10px;
+}
+.gsjj_a .png .png1{
+	width: 100%;	
+	position: absolute;
+	top: -452px;
+	left: 0;
+}
+.gsjj_a figure figcaption{
+	width: 55%;
+	height: 460px;
+	float: right;
+	/*background: url(../img/beig.jpg)no-repeat;*/
+}
+
+
+.gsjj_a figure figcaption article h2{
+   font-size: 24px;
+   font-weight: bold;
+   text-shadow: 1px 1px 1px #666;
+   border-bottom:2px solid #FFFAF0;
+   margin: 10px auto;
+   line-height: 30px;
+   text-align: center;	
+}
+
+
+.gsjj_a figure figcaption article p{
+	font-size: 15px;
+	letter-spacing: 2px;
+	line-height: 25px;	
+	
+}
+
+.gsjj_a figure figcaption article h3{
+	  font-size: 24px;
+	  font-weight: bold;
+	  text-shadow: 1px 1px 1px #F7E1B5;
+	  line-height: 40px;
+	 
+	  
+}
+
+.gsjj_a figure figcaption article h3 span{
+	font-size: 20px;
+	
+	 
+}
+.cen{
+	position: relative;
+	top: 15px!important;
+}
+#gsjj_cen h4{
+	font-size: 28px;
+   font-weight: bold;
+   text-shadow: 1px 1px 1px #666;
+   border-bottom:2px solid #FFFAF0;
+   margin: 10px auto;
+   line-height: 30px;
+   text-align: center;	
+}
+.hzhb_a{
+	width:100%;
+	height: 425px;	
+	margin-top: -6px;
+	position: relative;
+	overflow: hidden;
+}
+.hzhb_a ul li{
+	width: 24.5%;
+	height: 425px;
+	float: left;
+	list-style: none;
+	margin: 0 2px;
+	overflow: hidden;
+	
+}
+.hzhb_a  p{	
+	color: #000000;	
+	font-size: 16px;
+	margin-left: 120px;
+	
+	
+}
+.hzhb_a  img{
+	margin-top: -5px;
+   height: 425px;
+   width: 100%;
+}
+.hzhb_a a:hover{
+	text-decoration: none;
+}
+.hzhb_a .png2{	
+	width: 24.5%;
+	height: 428px;
+	position: absolute;
+	top: -405px;
+	padding: 0px;
+	
+	
+	
+}
+.information{
+	width: 49.8%;
+	height: 470px;
+	float: left;
+	
+}
+.information h5{
+	font-size: 24px;
+   font-weight: bold;
+   text-shadow: 1px 1px 1px #666;
+   border-bottom:2px solid #FFFAF0;
+   margin: 10px auto;
+   line-height: 30px;
+   text-align: center;	
+}
+.information hgroup{
+	width: 98%;
+	height: 200px;
+	margin-left: 10px;
+	overflow: hidden;
+	border: 1px solid #D4D4D4;
+	
+}
+.information hgroup ul li{	
+	list-style: none;
+	letter-spacing: 3px;
+	color: #666;
+	text-decoration: none;
+	font-size: 16px;
+	line-height: 25px;
+	
+	
+}
+.information hgroup ul li:hover{
+	text-decoration: none;
+}
+.xwtp{
+	width: 98%;
+	height: 200px;
+	margin: 8px auto;
+}
+.xwtp .item img{
+	height: 200px !important;
+}
+.cpzx{
+	width: 49.8%;
+	height: 470px;	
+	float: right;
+	
+}
+.cpzx h5{
+	font-size: 24px;
+   font-weight: bold;
+   text-shadow: 1px 1px 1px #666;
+   border-bottom:2px solid #FFFAF0;
+   margin: 10px auto;
+   line-height: 30px;
+   text-align: center;	
+}
+.cpzx_b{
+	width: 98%;
+	height: 420px;	
+	margin: 0 auto;
+}
+
+#myTabContent h6{
+	font-size: 20px;
+	font-weight: bold;
+	
+}
+#myTabContent p{
+	font-size: 14px;
+	line-height: 25px;
+}
+.home_a{
+	width: 98%;
+	height: 220px;
+	
+}
+.home_a img{
+	width: 43%;
+	/*height: 180px;*/
+	float: left;
+	padding: 0 4px;
+}
+
+#footer{
+	max-width: 100%;
+	height: 120px;
+	display: block;
+	margin: 0 auto;
+	background-color: #92b6fc;
+	margin-top: 0px;
+}
+#footer p{
+	color: floralwhite;
+	text-align: center;
+	text-shadow: 1px 1px 1px #000000;
+	margin: 2px 0;
+	position: relative;
+	top: 5px;
+	font-size: 18px;
+	
+	
+}
+
+@media (max-width:1080px ) {
+	
+
+.gsjj_a figure figcaption article h3{
+	  font-size: 20px;
+	  font-weight: bold;
+	  
+	  
+}
+
+.gsjj_a figure figcaption article h3 span{
+	font-size: 16px;
+	
+	 
+}
+.cen{
+	height: 460px !important;
+}
+.hzhb_a  p{	
+	margin-left: 90px;
+	
+	
+}
+
+
+}

@@ -1,0 +1,32 @@
+package com.zhixin.test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+public class Test_Message {
+
+	
+	public static void main(String args[]){
+		
+		System.out.println("++++++++++++Test_Message+++++++++++++");
+		 JSONObject jo1 = new JSONObject();
+		 JSONObject jb1 = new JSONObject();
+		 jb1.put("media_id", "123dsdajkasd231jhksad");
+		 jo1.put("msgtype", "mpnews");
+		 jo1.put("mpnews", jb1);
+		 List list1 = new ArrayList();
+		 list1.add("o2hr-wnlVRxI7-qGpOqF7QiI0Jdo");
+		 list1.add("o2hr-whKpeanWrMiWV-rwn7qzW4A");
+		 JSONArray jsonclient = JSONArray.fromObject(list1);
+		 jo1.put("touser", list1);
+		 
+		 System.out.println(jo1.toString());
+		
+		
+	}
+	
+	
+}

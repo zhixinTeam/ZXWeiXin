@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.zhixin.model">
+
+    <class name="App_activity" table="app_activity">
+
+        <id name="id" column="ID" type="java.lang.String">
+			<generator class="uuid" />
+		</id>
+		<property name="title" type="java.lang.String">
+            <column name="Title" />
+        </property>
+        <property name="path" type="java.lang.String">
+            <column name="Path" />
+        </property>
+        <property name="picname" type="java.lang.String">
+            <column name="PicName" />
+        </property>
+        <property name="context" type="java.lang.String">
+            <column name="Context" />
+        </property>
+		<property name="datetime" type="java.lang.String">
+            <column name="DateTime" />
+        </property>
+		 <property name="createdate" type="java.sql.Timestamp">
+            <column name="CreateDate" />
+        </property>
+		
+		
+		<!-- 
+			映射多对一的关联关系。 使用 many-to-one 来映射多对一的关联关系 
+			name: 多这一端关联的一那一端的属性的名字
+			class: 一那一端的属性对应的类名
+			column: 一那一端在多的一端对应的数据表中的外键的名字
+		-->
+		 <many-to-one name="factory" class="com.zhixin.model.Doc_Factory"   column="FactoryID" ></many-to-one>
+       
+ 		 
+        
+    </class>
+</hibernate-mapping>

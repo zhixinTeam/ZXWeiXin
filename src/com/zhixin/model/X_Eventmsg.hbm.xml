@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.zhixin.model.X_Eventmsg" table="wx_event_msg">
+		 <id name="id" column="ID" type="string">
+			<generator class="uuid" />
+		</id>
+		<property name="senduser" column="SendUser" type="string" />
+		<property name="factoryid" column="FactoryID" type="string" />
+		
+		<property name="reviceuser" column="ReviceUser" type="string"/> 
+		<property name="createTime" column="CreateName" type="java.lang.Long"/> 
+		<property name="msgType" column="MsgType" type="string"/> 
+		<property name="content" column="Content" type="string"/> 
+		<property name="picurl" column="PiCurl" type="string"/> 
+		<property name="event" column="Event" type="string"/>
+		
+		<property name="sendcount" type="java.lang.Integer">
+            <column name="SendCount" />
+        </property>
+		<property name="issend" type="java.lang.Integer">
+            <column name="IsSend" />
+        </property>
+	</class>
+</hibernate-mapping>

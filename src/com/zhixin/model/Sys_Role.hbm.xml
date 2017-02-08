@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="com.zhixin.model.Sys_Role" table="sys_role">
+        
+        <id name="id" column="ID" type="string">
+			<generator class="uuid" />
+		</id>
+        
+        <property name="rolename" type="java.lang.String">
+            <column name="RoleName" />
+        </property>
+        <property name="rolebz" type="java.lang.String">
+            <column name="RoleBZ" />
+        </property>
+        
+        <!-- lazy="false" -->
+        <set name="sys_users" cascade="all"   inverse="true" >
+        	<!-- 执行多的表中的外键列的名字 -->
+        	<key column="RoleID"></key>
+        	<!-- 指定映射类型 -->
+        	<one-to-many class="com.zhixin.model.Sys_User"/>
+         </set>
+        
+        
+         <many-to-one name="doc_factory" class="com.zhixin.model.Doc_Factory" column="FactoryID"></many-to-one>
+         
+         <many-to-one name="parent" class="com.zhixin.model.Sys_Role" column="ParentID"></many-to-one>
+        
+        <set name="children" cascade="save-update" inverse="true" lazy="false" order-by="RoleName DESC">
+        	<!-- 执行多的表中的外键列的名字 -->
+        	<key column="ParentID"></key>
+        	<!-- 指定映射类型 -->
+        	<one-to-many class="com.zhixin.model.Sys_Role"/>
+        </set>
+         
+         <set name="roles_auths"  cascade="save-update" table="link_roles_auths" inverse="true" >
+        	<!-- 执行多的表中的外键列的名字 -->
+        	<key column="RoleID"></key>
+        	<!--指定映射类型  -->
+        	<one-to-many class="com.zhixin.model.Link_Roles_Auths"/>
+        </set> 
+         
+         </class>
+</hibernate-mapping>

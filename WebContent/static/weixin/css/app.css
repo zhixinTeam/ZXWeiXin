@@ -1,0 +1,186 @@
+/* Write your styles */
+*{
+	padding: 0;
+	margin: 0;
+	border: 0;
+}
+
+body {
+  font-family: "Segoe UI", "Lucida Grande", 
+  font-size: 1.6rem;
+ }
+  
+html{
+	font-size: 62.5%;
+}
+
+
+.menua{
+	width: 100%;		
+	display: flex;
+	display: -webkit-flex;
+	justify-content: space-around;
+	-webkit-justify-content: space-around;
+	flex-wrap: nowrap;
+	-webkit-flex-wrap: nowrap;
+	margin: 5px auto;
+	
+	
+}
+.menu_a{
+	flex: 1;
+	-webkit-flex: 1;
+	margin: 5px;		
+	height: 6rem;
+
+}
+.menu_a img{
+	display: block;
+	max-width: 100%;
+	margin: 0 auto;
+	
+}
+.menu_a h1{
+	position: relative;
+	top:-1.8em;
+	text-align: center;
+	font-size: 1.5rem;
+	color: #666666;
+	font-family: "宋体";
+}
+.centera{
+	width: 100%;
+	
+}
+.am-icon-user{
+	color: red;
+}
+.am-icon-heart{
+	color: red;
+	margin-top: 6px;
+}
+.am-topbar-inverse{
+	background: white;
+}
+.am-header-title{
+	color:red !important;
+}
+.home{
+	color: red;
+}
+.am-g{
+	border: 0!important;
+}
+.am-like{
+	color: #666666;
+	font-family: "宋体";
+}
+.am-a{
+	width: 100%;
+}
+.am-gallery-item{
+	margin: 4px auto;
+	box-shadow: 2px 2px 2px #999;
+}
+.am-btn-default{
+	background: white;
+	border: none;
+}
+.am-footer-divider{
+	color: #666666;
+}
+.am-btn-block{
+	border: 1px solid #E9E9E9;
+}
+.am-cf{
+	margin-left: 0.8em;
+}
+.am-icon-gift{
+	color: red;
+}
+.am-footer-switch span,.am-footer-desktop{
+	color: #999 !important;
+	font-size: 0.9em;
+	font-family:"宋体" ;
+}
+
+
+
+/*2*/
+.am-header-default{
+	box-shadow: 2px 2px 2px #D9D9D9;
+}
+.am-h{
+	width: 100%;
+	
+}
+.am-danger{
+	background: white;
+	color: red;
+}
+.am-cen{
+	
+	margin: 20px auto;
+}
+.am-default{
+	background: #000000;
+}
+.am-icon-search{
+	color: white;
+	
+}
+.am-ga{	
+
+	margin: 15px auto;
+}
+.am-icon-angle-down{
+	color: red;
+}
+.am-btn-link{
+	border: 1px solid#999999;
+}
+.am-cen .am-s a{
+	list-style: none;
+	text-decoration: none;
+	color: #999999 !important;
+}
+
+.am-primary{
+	background: white;
+	color: #000000;
+	border: 1px solid#E6E6E6;
+	font-size: 15px;
+}
+.menc{
+	width: 100%;		
+	display: flex;	
+	display: -webkit-flex;
+	justify-content: center;
+	-webkit-justify-content: center;
+	box-sizing: border-box;
+}
+.menc .am-dropdown{
+	
+	flex: 1;
+	-webkit-flex: 1;
+	
+}
+.menc .am-dropdown button{
+	width: 100%;
+	border: 1px solid#E9E9E9;
+	border-right:none;
+	}
+
+.am-dropdown-header{
+	font-size: 1.4em;
+}
+.am-f{
+	width: 100%;
+	margin: 20px auto;
+}
+
+.am-defaultb{
+	border: 1px solid#D9D9D9;
+	margin: 2px;
+	font-size: 0.8em;
+}

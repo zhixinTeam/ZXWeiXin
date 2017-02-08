@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="com.zhixin.model.Shop_Client" table="shop_client">
+    
+        <id name="c_id" column="C_ID" type="string">
+			<generator class="uuid" />
+		</id>
+        
+        <property name="clientnumber" type="java.lang.String">
+            <column name="ClientNumber" />
+        </property>
+        <property name="cash" type="java.lang.String">
+            <column name="Cash" />
+        </property>
+        
+        <property name="clientname" type="java.lang.String">
+            <column name="clientname" />
+        </property>
+        
+        
+       <set name="shoporders"   table="shop_order" inverse="true" >
+        	<!-- 执行多的表中的外键列的名字 -->
+        	<key column="clientID"></key>
+        	<!--指定映射类型  -->
+        	<one-to-many class="com.zhixin.model.Shop_Order"/>
+        </set> 
+        <many-to-one name="shopuser" class="com.zhixin.model.Shop_User" 
+			column="UserID"  cascade="all"></many-to-one>
+         <!-- 
+         <many-to-one name="doc_factory" class="com.zhixin.model.Doc_Factory"   lazy="false" update="false"  cascade="all"   column="FactoryID"></many-to-one>
+    -->
+    </class>
+</hibernate-mapping>
