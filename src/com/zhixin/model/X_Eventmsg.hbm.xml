@@ -7,7 +7,7 @@
 		 <id name="id" column="ID" type="string">
 			<generator class="uuid" />
 		</id>
-		<property name="senduser" column="SendUser" type="string" />
+		
 		<property name="factoryid" column="FactoryID" type="string" />
 		
 		<property name="reviceuser" column="ReviceUser" type="string"/> 

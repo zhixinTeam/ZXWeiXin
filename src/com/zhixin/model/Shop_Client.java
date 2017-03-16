@@ -18,13 +18,14 @@ public class Shop_Client implements Serializable{
 	
 	private String cash;
 	
-	private Shop_User shopuser;
-	
 	
 	private String clientname;
 	
 	private Set<Shop_Order> shoporders = new HashSet<>();
-	/*private Doc_Factory doc_factory;*/
+	
+	private Wx_BindCustomer bindcustmoer;
+	
+	private Doc_Factory doc_factory;
 
 	public String getC_id() {
 		return c_id;
@@ -50,28 +51,30 @@ public class Shop_Client implements Serializable{
 		this.cash = cash;
 	}
 
-	public Shop_User getShopuser() {
-		return shopuser;
-	}
+	
 
-	public void setShopuser(Shop_User shopuser) {
-		this.shopuser = shopuser;
-	}
-
-	/*public Doc_Factory getDoc_factory() {
+	public Doc_Factory getDoc_factory() {
 		return doc_factory;
 	}
 
 	public void setDoc_factory(Doc_Factory doc_factory) {
 		this.doc_factory = doc_factory;
 	}
-*/
+
 	
 	
 	
 
 	public String getClientname() {
 		return clientname;
+	}
+
+	public Wx_BindCustomer getBindcustmoer() {
+		return bindcustmoer;
+	}
+
+	public void setBindcustmoer(Wx_BindCustomer bindcustmoer) {
+		this.bindcustmoer = bindcustmoer;
 	}
 
 	public void setClientname(String clientname) {

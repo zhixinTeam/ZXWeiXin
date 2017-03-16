@@ -27,4 +27,6 @@ public interface CompanyDao extends DaoSupport<Doc_Company>{
 
 	Doc_Company findCompanyByAppid(String string);
 
+	Doc_Company findCompanyByOriginalID(String originalID);
+
 }

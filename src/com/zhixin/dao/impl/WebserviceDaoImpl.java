@@ -3,6 +3,7 @@ package com.zhixin.dao.impl;
 
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -19,36 +20,19 @@ import com.zhixin.model.X_Eventmsg;
 public class WebserviceDaoImpl extends DaoSupportImpl<X_Eventmsg> implements WebserviceDao {
 
 	@Override
-	public Wx_BindCustomer findUniqueCustomer(String fac_id,String phone) {
+	public List<Wx_BindCustomer> findCustomerList(String fac_id) {
 		// TODO Auto-generated method stub
-		/*(Wx_BindCustomer) getSession().createQuery(//
-		"from Wx_BindCustomer f where f.phone=?")//
-		.setParameter(0, phone)//
-		.uniqueResult();*/
-		Query query1=getSession().createQuery("from Link_BindCustomers_Factorys  l where l.factory.id = '"+fac_id+"'");  //带条件的查询语句     
+		
+		Query query1=getSession().createQuery("from Link_BindCustomers_Factorys  l where l.factory.id = '"+fac_id+"' ");  //带条件的查询语句     
 		List<Link_BindCustomers_Factorys> list1=query1.list();
-		List c_id = new ArrayList();
+		List<Wx_BindCustomer> list = new ArrayList();
 		if(list1.size()>0){
 			for(Link_BindCustomers_Factorys link_bind_fac:list1){
-				c_id.add(link_bind_fac.getBindcustomer().getId());
+				list.add(link_bind_fac.getBindcustomer());
 			}
 		}
-		if(c_id.size()>0){
-			phone =phone.trim();
-			String param ="";
-			param+="   phone = '"+phone+"'  and";
-			Query query=getSession().createQuery("from Wx_BindCustomer   where "+param+" id in(:alist) ");  //带条件的查询语句  
-			query.setParameterList("alist", c_id); 
-			List<Wx_BindCustomer> list=query.list();
-			if(list.size()>0)
-				return list.get(0);
-			else
-				return  null;
-		}else{
-			return null;
-		}
 		
-		
+		return list;
 		
 
 	}

@@ -21,5 +21,4 @@ public interface ShopDriverDao extends DaoSupport<Shop_Driver> {
 	
 	void updateShoperDriver(Shop_Driver driver);
 	
-	//List<Json_Driver> findAppPackByFactoryid(String factoryId,String currentPage);
 }

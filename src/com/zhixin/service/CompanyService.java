@@ -29,5 +29,7 @@ public interface CompanyService {
 
 	String find_tokenByappid(String app_id);
 
+	Doc_Company findCompanyByOriginalID(String originalID);
+
 
 }

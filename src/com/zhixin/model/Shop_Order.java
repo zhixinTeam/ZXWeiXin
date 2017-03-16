@@ -26,7 +26,7 @@ public class Shop_Order implements Serializable {
 	
 	private String fac_order_no;
 	
-	private Shop_User shopuser;
+	private Wx_BindCustomer bindcustmoer;
 	
 	private Shop_Driver shopdriver;
 	
@@ -64,11 +64,6 @@ public class Shop_Order implements Serializable {
 		this.orderdate = orderdate;
 	}
 
-	public Shop_User getShopuser() {
-		return shopuser;
-	}
-
-	
 	
 	public String getFac_order_no() {
 		return fac_order_no;
@@ -78,8 +73,14 @@ public class Shop_Order implements Serializable {
 		this.fac_order_no = fac_order_no;
 	}
 
-	public void setShopuser(Shop_User shopuser) {
-		this.shopuser = shopuser;
+	
+
+	public Wx_BindCustomer getBindcustmoer() {
+		return bindcustmoer;
+	}
+
+	public void setBindcustmoer(Wx_BindCustomer bindcustmoer) {
+		this.bindcustmoer = bindcustmoer;
 	}
 
 	public Shop_Driver getShopdriver() {
@@ -145,6 +146,8 @@ public class Shop_Order implements Serializable {
 	public void setShopclient(Shop_Client shopclient) {
 		this.shopclient = shopclient;
 	}
+
+	
 	
 	
 	

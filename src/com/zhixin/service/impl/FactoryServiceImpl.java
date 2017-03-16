@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.zhixin.dao.FactoryDao;
+import com.zhixin.entity.Json_Doc_Factory;
 import com.zhixin.entity.Json_Sys_picture;
 import com.zhixin.model.Doc_Factory;
 import com.zhixin.model.PageBean;
@@ -72,6 +73,30 @@ public class FactoryServiceImpl implements FactoryService {
 	public List<Json_Sys_picture> findFacturePictureByFactoryId(String factoryId, String currentPage) {
 		// TODO Auto-generated method stub
 		return factorydao.findFacturePictureByFactoryId(factoryId,currentPage);
+	}
+
+	@Override
+	public List<Doc_Factory> findFactoryByComID(String companyid) {
+		// TODO Auto-generated method stub
+		return factorydao.findFactoryByComID( companyid);
+	}
+
+	@Override
+	public List<Json_Doc_Factory> findFactoryByCompanyID(String companyid) {
+		// TODO Auto-generated method stub
+		return factorydao.findFactoryByCompanyID(companyid);
+	}
+
+	@Override
+	public List<Json_Doc_Factory> findFactoryByCustomerId(String c_id) {
+		// TODO Auto-generated method stub
+		return factorydao.findFactoryByCustomerId(c_id);
+	}
+
+	@Override
+	public List<Doc_Factory> findFactorysByCustomerId(String c_id) {
+		// TODO Auto-generated method stub
+		return factorydao.findFactorysByCustomerId(c_id);
 	}
 
 	

@@ -5,7 +5,6 @@ import java.sql.Timestamp;
 import com.zhixin.model.Doc_Factory;
 import com.zhixin.model.Shop_Driver;
 import com.zhixin.model.Shop_Goods;
-import com.zhixin.model.Shop_User;
 
 public class Json_ShopOrder {
 
@@ -40,6 +39,8 @@ private String o_id;
 	
 	private Integer pageCount;
 
+	private String drivertracknumber;
+	
 	public String getO_id() {
 		return o_id;
 	}
@@ -76,6 +77,14 @@ private String o_id;
 
 	
 	
+	public String getDrivertracknumber() {
+		return drivertracknumber;
+	}
+
+	public void setDrivertracknumber(String drivertracknumber) {
+		this.drivertracknumber = drivertracknumber;
+	}
+
 	public String getShopdrivername() {
 		return shopdrivername;
 	}

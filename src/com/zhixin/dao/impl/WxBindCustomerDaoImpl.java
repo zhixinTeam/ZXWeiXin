@@ -1,6 +1,8 @@
-package com.zhixin.dao.impl;
+﻿package com.zhixin.dao.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -16,6 +18,8 @@ import com.zhixin.model.Doc_Company;
 import com.zhixin.model.Doc_Factory;
 import com.zhixin.model.Link_BindCustomers_Factorys;
 import com.zhixin.model.PageBean;
+import com.zhixin.model.Shop_Client;
+import com.zhixin.model.Shop_Driver;
 import com.zhixin.model.Sys_Auth;
 import com.zhixin.model.Sys_User;
 import com.zhixin.model.Wx_BindCustomer;
@@ -92,7 +96,6 @@ public class WxBindCustomerDaoImpl extends DaoSupportImpl<Wx_BindCustomer> imple
 		this.getSession().save(wx_bind);
 		for(Doc_Factory factory: listfactorys){
 			Link_BindCustomers_Factorys link_bind_fac = new Link_BindCustomers_Factorys();
-			link_bind_fac.setClientNumber(wx_bind.getSuserNumber());
 			link_bind_fac.setBindcustomer(wx_bind);
 			link_bind_fac.setIsbind(0);
 			link_bind_fac.setFactory(factory);
@@ -125,28 +128,20 @@ public class WxBindCustomerDaoImpl extends DaoSupportImpl<Wx_BindCustomer> imple
 	}
 	//TODO 关联对象修改
 	@Override
-	public void update_wxbindUser(Wx_BindCustomer wx_bind ,List <Doc_Factory> listfactorys,String old_facids_str) {
+	public void update_wxbindUser(Wx_BindCustomer wx_bind ,List <Doc_Factory> listfactorys) {
 		// TODO Auto-generated method stub
 		String delsql ="delete from link_bindcustomers_factorys   where BindcustomerID  =?"; //
 		SQLQuery query4 = getSession().createSQLQuery(delsql);
 		query4.setParameter(0, wx_bind.getId());
 		query4.executeUpdate();
+		getSession().update(wx_bind);
 		for(Doc_Factory factory: listfactorys){
 			Link_BindCustomers_Factorys link_bind_fac = new Link_BindCustomers_Factorys();
-			link_bind_fac.setClientNumber(wx_bind.getSuserNumber());
 			link_bind_fac.setBindcustomer(wx_bind);
 			link_bind_fac.setFactory(factory);
-			if(!(factory.getId().indexOf(old_facids_str) == -1 )&& !("".equals(old_facids_str))){
-				link_bind_fac.setIsbind(1);
-			}
-			else{
-				link_bind_fac.setIsbind(0);
-			}
-				
-			this.getSession().merge(link_bind_fac);
+			link_bind_fac.setIsbind(0);
+			this.getSession().save(link_bind_fac);
 		}
-		
-		getSession().merge(wx_bind);
 	}
 
 	@Override
@@ -215,6 +210,115 @@ public class WxBindCustomerDaoImpl extends DaoSupportImpl<Wx_BindCustomer> imple
 		return new Wx_BindCustomer();
 	}
 
+	@Override
+	public void saveShopClient(List<Shop_Client> listjb) {
+		// TODO Auto-generated method stub
+		
+		for (Shop_Client shopclient:listjb){
+			System.out.println(shopclient);
+			this.getSession().save(shopclient);
+		}
+		
+
+	}
+
+	@Override
+	public Shop_Client findClientByFactory(String clientnumber,String factoryID) {
+		// TODO Auto-generated method stub
+		System.out.println("==========findClientByFactory===========");
+		
+		String queryStr ="from Shop_Client c left join c.doc_factory as u where u.id=? and c.clientnumber=?";
+		Query queryObj =this.getSession().createQuery(queryStr);
+		queryObj.setParameter(0, factoryID);
+		queryObj.setParameter(1, clientnumber);
+		List list =queryObj.list();                    //执行查询   
+        Iterator it=list.iterator();  
+        while(it.hasNext()){   
+       	   Object[] obj=(Object[])it.next();  
+       	   Shop_Client client =(Shop_Client) obj[0]; 
+       	   return client;
+        }
+		return null;                    //执行查询   
+		
+	}
+
+	@Override
+	public void deleteByClientID(List<String> listdel) {
+		// TODO Auto-generated method stub
+		String hql="delete Shop_Client  as c where c.clientnumber=?";
+		Query querydel =null;
+		for(String clientid:listdel){
+			   querydel=getSession().createQuery(hql);
+			   querydel.setString(0,clientid);
+			   querydel.executeUpdate();
+		}
+	}
+
+	@Override
+	public Wx_BindCustomer findByUSername(String newusername) {
+		// TODO Auto-generated method stub
+		return  (Wx_BindCustomer) getSession().createQuery(//
+				"from Wx_BindCustomer f where f.namepinyin=?")//
+				.setParameter(0, newusername)//
+				.uniqueResult();
+	}
+
+	@Override
+	public List<Shop_Client> findClientByCustomerId(String customerid, String factoryid) {
+		// TODO Auto-generated method stub
+		Query query1=getSession().createQuery("from Shop_Client  c where c.doc_factory.id = '"+factoryid+"' and c.bindcustmoer.id ='"+customerid+"'");  //带条件的查询语句     
+		List<Shop_Client> list1=query1.list();
+		return list1;
+	}
+
+	@Override
+	public Wx_BindCustomer findFactoryBycustomerID(String customerID) {
+		// TODO Auto-generated method stub
+		return  (Wx_BindCustomer) getSession().createQuery(//
+				"from Wx_BindCustomer f where f.id=?")//
+				.setParameter(0, customerID)//
+				.uniqueResult();
+	}
+
+	@Override
+	public Set<Wx_BindCustomer> findBindCustomerFactoryID(String tracknumber, String factoryid) {
+		// TODO Auto-generated method stub
+		List<Shop_Driver> list_drivers =getSession().createQuery(//
+				"from Shop_Driver f where f.tracknumber=?")//
+				.setParameter(0, tracknumber).list();//
+		Set<Wx_BindCustomer> list_wxbindcustomers = new HashSet();
+		for(Shop_Driver driver:list_drivers){
+			Query query1=getSession().createQuery("from Link_BindCustomers_Factorys  l where l.factory.id = '"+factoryid+"' and l.bindcustomer.phone='"+driver.getPhone()+"'");  //带条件的查询语句     
+			List<Link_BindCustomers_Factorys> list1=query1.list();
+			for(Link_BindCustomers_Factorys linkcus_factory:list1){
+				list_wxbindcustomers.add(linkcus_factory.getBindcustomer());
+			}
+		}
+		return list_wxbindcustomers;
+		
+	}
+
+
+	@Override
+	public void saveCustomer(Wx_BindCustomer wx_bind) {
+		// TODO Auto-generated method stub
+		this.getSession().save(wx_bind);
+
+	}	
+	@Override
+	public void updateLinkFactoryBycustomer(Doc_Factory factory, Wx_BindCustomer wx_BindCustomer) {
+		// TODO Auto-generated method stub
+		Link_BindCustomers_Factorys link_bind_factory=(Link_BindCustomers_Factorys) getSession().createQuery("from Link_BindCustomers_Factorys  l where l.factory.id = '"+factory.getId()+"' and l.bindcustomer.id='"+wx_BindCustomer.getId()+"'").uniqueResult();  //带条件的查询语句     
+		if(link_bind_factory==null){
+			Link_BindCustomers_Factorys link=new Link_BindCustomers_Factorys();
+			link.setBindcustomer(wx_BindCustomer);
+			link.setFactory(factory);
+			this.getSession().save(link);
+		}
+			
+	}
+
+	
 	
 	
 }

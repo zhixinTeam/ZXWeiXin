@@ -19,6 +19,8 @@ public class X_Eventmsg extends Event_msg{
 	
 	private String factoryid ;
 	
+	private String openid;
+	
 	
 	public String getId() {
 		return id;
@@ -54,6 +56,14 @@ public class X_Eventmsg extends Event_msg{
 
 	public void setFactoryid(String factoryid) {
 		this.factoryid = factoryid;
+	}
+
+	public String getOpenid() {
+		return openid;
+	}
+
+	public void setOpenid(String openid) {
+		this.openid = openid;
 	}
 
 	

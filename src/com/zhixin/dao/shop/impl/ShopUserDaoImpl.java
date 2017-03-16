@@ -1,8 +1,5 @@
 package com.zhixin.dao.shop.impl;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -17,104 +14,28 @@ import org.springframework.stereotype.Service;
 import com.zhixin.base.DaoSupportImpl;
 import com.zhixin.dao.shop.ShopUserDao;
 import com.zhixin.entity.Json_Client;
+import com.zhixin.entity.Json_Doc_Company;
 import com.zhixin.entity.Json_Driver;
 import com.zhixin.entity.Json_Goods;
-import com.zhixin.model.Doc_Factory;
-import com.zhixin.model.ShopLink_User_Driver;
+import com.zhixin.model.Doc_Company;
+import com.zhixin.model.ShopLink_Customer_Driver;
 import com.zhixin.model.Shop_Client;
 import com.zhixin.model.Shop_Driver;
 import com.zhixin.model.Shop_Goods;
-import com.zhixin.model.Shop_User;
+import com.zhixin.model.Shop_Order;
+import com.zhixin.model.Wx_BindCustomer;
 
 
 @Service(value="shopuserDao")
-public class ShopUserDaoImpl extends DaoSupportImpl<Shop_User> implements ShopUserDao{
+public class ShopUserDaoImpl extends DaoSupportImpl<Wx_BindCustomer> implements ShopUserDao{
 
 	@Override
-	public Shop_User findShopUserByNameAndPwd(String passwd) {
+	public Wx_BindCustomer getWx_BindCustomerByNameAndPWd(String passwd) {
 		// TODO Auto-generated method stub
-		return (Shop_User) getSession().createQuery(//
-				"from Shop_User u where u.password=?")//
+		return (Wx_BindCustomer) getSession().createQuery(//
+				"from Wx_BindCustomer u where u.password=?")//
 				.setParameter(0, passwd)//
 				.uniqueResult();
-	}
-
-	@Override
-	public Shop_User findShopUserByPhoneandFactoryid(String phone,String factoryid) {
-		// TODO Auto-generated method stub
-		return (Shop_User) getSession().createQuery(//
-				"from Shop_User u  where  u.doc_factory.id=? and u.username=? ")//
-				.setParameter(0, factoryid)
-				.setParameter(1, phone).uniqueResult();//
-		
-				
-	}
-
-	@Override
-	public void saveShopUserandClient(List<Shop_Client> listjb, Shop_User shopuser) {
-		// TODO Auto-generated method stub
-		this.getSession().save(shopuser);
-		for (Shop_Client shopclient:listjb){
-			this.getSession().save(shopclient);
-		}
-	}
-
-	@Override
-	public void saveShopClient(List<Shop_Client> listjb) {
-		// TODO Auto-generated method stub
-		for (Shop_Client shopclient:listjb){
-			this.getSession().save(shopclient);
-		}
-	}
-
-	@Override
-	public void deleteByClientID(List<String> listdel) {
-		// TODO Auto-generated method stub
-		String hql="delete Shop_Client  as c where c.clientnumber=?";
-		Query querydel =null;
-		for(String clientid:listdel){
-			   querydel=getSession().createQuery(hql);
-			   querydel.setString(0,clientid);
-			   querydel.executeUpdate();
-		}
-	}
-
-	@Override
-	public void updateShopClients(List<Shop_Client> listjb) {
-		// TODO Auto-generated method stub
-		Shop_Client shopclient = null;
-		for(Shop_Client client:listjb){
-			shopclient=(Shop_Client) this.getSession().createQuery(//
-					"from Shop_Client g where g.clientnumber=?")//
-					.setParameter(0, client.getClientnumber())//
-					.uniqueResult();
-			shopclient.setClientnumber(client.getClientnumber());
-			shopclient.setCash(client.getCash());
-			this.getSession().save(shopclient);
-		}
-	}
-
-	@Override
-	public Shop_User findShopUserByID(String shopuserid) {
-		// TODO Auto-generated method stub
-		return (Shop_User) getSession().createQuery(//
-				"from Shop_User u where u.u_id=?")//
-				.setParameter(0, shopuserid)//
-				.uniqueResult();
-	}
-
-	@Override
-	public List<Shop_Driver> findShopDriver(Set<ShopLink_User_Driver> linkuser_driverSet) {
-		// TODO Auto-generated method stub
-		String queryStr ="from ShopLink_User_Driver l where l.l_id=?";
-		Query queryObj =this.getSession().createQuery(queryStr);
-		List listdrivers = new ArrayList<Shop_Driver>();
-		ShopLink_User_Driver linkuserdriver =null;
-		for( ShopLink_User_Driver link_user_driver:linkuser_driverSet){
-			linkuserdriver=	(ShopLink_User_Driver) queryObj.setParameter(0, link_user_driver.getL_id()).uniqueResult();
-			listdrivers.add(linkuserdriver.getShopdriver());
-		}
-		return listdrivers;
 	}
 
 
@@ -217,19 +138,10 @@ public class ShopUserDaoImpl extends DaoSupportImpl<Shop_User> implements ShopUs
 	}
 
 	@Override
-	public Shop_User findShopUserByUsername(String username,String factoryid) {
+	public Set<ShopLink_Customer_Driver> findShopLink_Customer_DriverByU_id(Wx_BindCustomer customer) {
 		// TODO Auto-generated method stub
-		return (Shop_User) getSession().createQuery(//
-				"from Shop_User u where u.username=?and u.doc_factory.id=? ")//
-				.setParameter(0, username)//
-				.setParameter(1, factoryid).uniqueResult();
-	}
-
-	@Override
-	public Set<ShopLink_User_Driver> findShopLink_User_DriverByU_id(Shop_User user) {
-		// TODO Auto-generated method stub
-		Criteria criteria=getSession().createCriteria(ShopLink_User_Driver.class).add(Restrictions.eq("shopuser", user));
-		Set<ShopLink_User_Driver> linkuser_driverSet=new HashSet(criteria.list()); 
+		Criteria criteria=getSession().createCriteria(ShopLink_Customer_Driver.class).add(Restrictions.eq("wx_bindCustomer", customer));
+		Set<ShopLink_Customer_Driver> linkuser_driverSet=new HashSet(criteria.list()); 
 		return linkuser_driverSet;
 	}
 
@@ -250,7 +162,124 @@ public class ShopUserDaoImpl extends DaoSupportImpl<Shop_User> implements ShopUs
 		return null;                    //执行查询   
 	}
 
-	
+	@Override
+	public void updateWx_BindCustomerPassword(Wx_BindCustomer wx_BindCustomer) {
+		// TODO Auto-generated method stub
+		getSession().update(wx_BindCustomer);
+	}
+
+	@Override
+	public Wx_BindCustomer getWx_BindCustomerByid(String wx_BindCustomer_id) {
+		// TODO Auto-generated method stub
+		return (Wx_BindCustomer) getSession().createQuery(//
+				"from Wx_BindCustomer u where u.id=?")//
+				.setParameter(0, wx_BindCustomer_id)//
+				.uniqueResult();
+		
+	}
+
+	@Override
+	public List<Shop_Driver> findShopDrivers(Set<ShopLink_Customer_Driver> shopLink_Customer_Driver) {
+		String queryStr ="from ShopLink_Customer_Driver l where l.l_id=?";
+		Query queryObj =this.getSession().createQuery(queryStr);
+		List listdrivers = new ArrayList<Shop_Driver>();
+		ShopLink_Customer_Driver linkuserdriver =null;
+		for(ShopLink_Customer_Driver link_user_driver:shopLink_Customer_Driver){
+			linkuserdriver=	(ShopLink_Customer_Driver) queryObj.setParameter(0, link_user_driver.getL_id()).uniqueResult();
+		   //	linkuserdriver.getShopdriver();
+			listdrivers.add(linkuserdriver.getShopdriver());
+		}
+		return listdrivers;
+	}
+
+
+
+	@Override
+	public void updateshopDriver(Shop_Driver driver) {
+		// TODO Auto-generated method stub
+		getSession().update(driver);
+	}
+
+
+	@Override
+	public Json_Driver findJsonDriverByD_ID(String d_id) {
+		// TODO Auto-generated method stub
+		Shop_Driver driver = (Shop_Driver) getSession().createQuery(//
+				"from Shop_Driver d where d.d_id=?")//
+				.setParameter(0, d_id)//
+				.uniqueResult();
+		Json_Driver jsondriver = new Json_Driver();
+		jsondriver.setD_id(driver.getD_id());
+		jsondriver.setIdnumber(driver.getIdnumber());
+		jsondriver.setName(driver.getName());
+		jsondriver.setTracknumber(driver.getTracknumber());
+		jsondriver.setPhone(driver.getPhone());
+		return jsondriver;
+	}
+
+	@Override
+	public Shop_Driver findDriverByD_ID(String d_id) {
+		// TODO Auto-generated method stub
+		return (Shop_Driver) getSession().createQuery(//
+				"from Shop_Driver u where u.d_id=?")//
+				.setParameter(0, d_id)//
+				.uniqueResult();
+	}
+
+	@Override
+	public void updateShoperDriver(Shop_Driver driver) {
+		// TODO Auto-generated method stub
+		getSession().update(driver);
+	}
+
+	@Override
+	public List<Shop_Order> findShopOrderByDriverId(Shop_Driver driver) {
+		Criteria criteria=getSession().createCriteria(Shop_Order.class).add(Restrictions.eq("shopdriver",driver));
+		List<Shop_Order> list=criteria.list();
+		return list;
+	}
+
+	@Override
+	public void updateLastLogin(Wx_BindCustomer wx_BindCustomer) {
+		// TODO Auto-generated method stub
+		getSession().update(wx_BindCustomer);
+	}
+
+
+	@Override
+	public Shop_Client findShopClientByID(String c_id) {
+		// TODO Auto-generated method stub
+		return (Shop_Client) getSession().createQuery(//
+				"from Shop_Client u where u.c_id=?")//
+				.setParameter(0, c_id)//
+				.uniqueResult();
+	}
+
+
+
+
+	@Override
+	public Json_Doc_Company findDoc_Company(String c_id) {
+		// TODO Auto-generated method stub
+		
+		return null;
+	}
+
+
+
+
+	@Override
+	public Wx_BindCustomer getWx_BindCustomerPWd(String pc_passwd) {
+		// TODO Auto-generated method stub
+		return (Wx_BindCustomer) getSession().createQuery(//
+				"from Wx_BindCustomer u where u.pc_password=?")//
+				.setParameter(0, pc_passwd)//
+				.uniqueResult();
+	}
+
+
+
+
 
 	
 

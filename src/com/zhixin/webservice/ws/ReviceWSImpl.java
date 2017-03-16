@@ -26,15 +26,17 @@ public class ReviceWSImpl implements ReviceWS{
               case "get_Bindfunc":
             	  return_str =webserviceservice.update_bindfac( params);
             	  break;
-              case "edit_shopgoods":
-            	  return_str =webserviceservice.save_shopgoods( params);
-            	  break;
               case "edit_shopclients":
             	  return_str =webserviceservice.save_shopclients( params);
             	  break;
               case "get_shoporders":
             	  return_str =webserviceservice.updateget_shoporders( params);
             	  break;
+             /* case "edit_shopgoods":
+            	  return_str =webserviceservice.save_shopgoods( params);
+            	  break;
+              */
+              
               case "get_shoporderByNO":
             	  return_str =webserviceservice.updateget_shoporderByNO( params);
             	  break;

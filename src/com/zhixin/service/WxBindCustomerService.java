@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.zhixin.model.Doc_Factory;
 import com.zhixin.model.PageBean;
+import com.zhixin.model.Shop_Client;
 import com.zhixin.model.Sys_User;
 import com.zhixin.model.Wx_BindCustomer;
 import com.zhixin.model.Wx_BindUser;
@@ -21,7 +22,7 @@ public interface WxBindCustomerService {
 
 	Wx_BindCustomer findwxbindcustomerByOpenID(String openid);
 
-	void update_wxbindUser(Wx_BindCustomer wx_bind, List <Doc_Factory> listfactorys,String old_facids_str);
+	void update_wxbindUser(Wx_BindCustomer wx_bind, List <Doc_Factory> listfactorys);
 
 	Wx_BindCustomer findwxbindcustomerByID(String flagID);
 
@@ -34,5 +35,16 @@ public interface WxBindCustomerService {
 	Set<Sys_User> findsysUserByFactoryID(String factoryid);
 
 	Wx_BindCustomer findFactoryByPhone(String phone, String factoryid);
+
+	Wx_BindCustomer findByUSername(String newusername);
+
+	List<Shop_Client> findClientByCustomerId(String customerid, String factoryid);
+
+	Set<Wx_BindCustomer> findBindCustomerFactoryID(String tracknumber, String factoryid);
 	
+	/**
+	 * pc端用户注册
+	 * @param wx_bind
+	 */
+	void saveCustomer(Wx_BindCustomer wx_bind);
 }

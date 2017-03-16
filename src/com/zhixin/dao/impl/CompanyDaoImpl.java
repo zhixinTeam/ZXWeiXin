@@ -117,6 +117,13 @@ public class CompanyDaoImpl extends DaoSupportImpl<Doc_Company> implements Compa
 		}
 	}
 
+	@Override
+	public Doc_Company findCompanyByOriginalID(String originalID) {
+		// TODO Auto-generated method stub
+		return (Doc_Company)getSession().createQuery("from Doc_Company c  where c.originalID='"+originalID+"' ").uniqueResult();
+		
+	}
+
 	
 
 }

@@ -13,6 +13,7 @@ import com.zhixin.dao.WxBindCustomerDao;
 import com.zhixin.model.Doc_Factory;
 import com.zhixin.model.Link_BindCustomers_Factorys;
 import com.zhixin.model.PageBean;
+import com.zhixin.model.Shop_Client;
 import com.zhixin.model.Sys_User;
 import com.zhixin.model.Wx_BindCustomer;
 import com.zhixin.model.Wx_BindUser;
@@ -61,9 +62,9 @@ public class WxBindCustomerServiceImpl  implements WxBindCustomerService{
 		return wxbindcustomerDao.findwxbindcustomerByOpenID(openid);
 	}
 	@Override
-	public void update_wxbindUser(Wx_BindCustomer wx_bind ,List <Doc_Factory> listfactorys ,String old_facids_str) {
+	public void update_wxbindUser(Wx_BindCustomer wx_bind ,List <Doc_Factory> listfactorys ) {
 		// TODO Auto-generated method stub
-		wxbindcustomerDao.update_wxbindUser(wx_bind , listfactorys,old_facids_str);
+		wxbindcustomerDao.update_wxbindUser(wx_bind , listfactorys);
 		
 		
 	}
@@ -100,6 +101,26 @@ public class WxBindCustomerServiceImpl  implements WxBindCustomerService{
 	public Wx_BindCustomer findFactoryByPhone(String phone, String factoryid) {
 		// TODO Auto-generated method stub
 		return wxbindcustomerDao.findsysUserByFactoryID( phone,factoryid);
+	}
+	@Override
+	public Wx_BindCustomer findByUSername(String newusername) {
+		// TODO Auto-generated method stub
+		return wxbindcustomerDao.findByUSername( newusername) ;
+	}
+	@Override
+	public List<Shop_Client> findClientByCustomerId(String customerid, String factoryid) {
+		// TODO Auto-generated method stub
+		return wxbindcustomerDao.findClientByCustomerId(customerid,factoryid);
+	}
+	@Override
+	public Set<Wx_BindCustomer> findBindCustomerFactoryID(String tracknumber, String factoryid) {
+		// TODO Auto-generated method stub
+		return wxbindcustomerDao.findBindCustomerFactoryID(tracknumber,factoryid);
+	}
+	@Override
+	public void saveCustomer(Wx_BindCustomer wx_bind) {
+		// TODO Auto-generated method stub
+		wxbindcustomerDao.saveCustomer(wx_bind);
 	}
 	
 	

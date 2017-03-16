@@ -40,17 +40,19 @@ public class SendMsgServiceImpl implements SendMsgService{
 	public void update_sendMsgService() {
 		// TODO Auto-generated method stub
 		List<X_Eventmsg> listunmsg =sendmsgdao.findUnsendMsg();
+		System.out.println(listunmsg.size()+"listunmsg的数量++++++++++++++++++++");
 		for(X_Eventmsg msg: listunmsg){
 			String type1 = msg.getMsgType();
 			String id = msg.getId();
 			String content =msg.getContent();
-			String openid =msg.getReviceuser();
+			String openid =msg.getOpenid();
 			String factoryid =msg.getFactoryid();
 			Map<String,String> retmap =sendmsgdao.findMsgType(factoryid,type1);
 		    //String originalID =	retmap.get("originalID");
 			int sendcount =msg.getSendcount();
 			sendcount =sendcount+1;
 			TemplateMessage templatemsg =null;
+			System.out.println("模板消息的类型++++++++++++++++++++"+type1);
 			 switch(type1)
 		        {
 		              case "1":
@@ -71,17 +73,21 @@ public class SendMsgServiceImpl implements SendMsgService{
 		            	  break;
 		              default:
 		            	   System.out.println("other"); }
-			
-			templatemsg.setTouser(openid);
-			//查看详情跳转的地址
-			String get_param="?type="+type1+"&msg_id="+id;
-			if(!type1.equals("5"))
-			   templatemsg.setUrl("http://www.hnzxtech.cn/wxplatform/wxuser/msgDeatils"+get_param);
-			TemplateMessageResult templateresult =MessageAPI.messageTemplateSend(TokenManager.getToken(retmap.get("appid")), templatemsg);
 			//修改状态
-			int issend =0;
-			if("0".equals(templateresult.getErrcode()))
-				issend=1;
+				int issend =0;
+			if(openid !=null){
+				templatemsg.setTouser(openid);
+				//查看详情跳转的地址
+				String get_param="?type="+type1+"&msg_id="+id;
+				//if(!type1.equals("5"))
+				templatemsg.setUrl("http://www.hnzxtech.cn/wxplatform/wxuser/msgDeatils"+get_param);
+				TemplateMessageResult templateresult =MessageAPI.messageTemplateSend(TokenManager.getToken(retmap.get("appid")), templatemsg);
+				//修改状态
+				if("0".equals(templateresult.getErrcode()))
+					issend=1;
+				System.out.println("模板消息发送成功+++++++++状态是1+++++++++++++++++");
+			}
+				
 			sendmsgdao.update_issend_msg(id,sendcount,issend);
 				
 		}
@@ -94,8 +100,9 @@ public class SendMsgServiceImpl implements SendMsgService{
 	private TemplateMessage sendxthd(Map<String, String> retmap, String content) {
 		// TODO Auto-generated method stub
 		 JSONObject jb = JSONObject.fromObject(content);
+		 	System.out.println("enter sendxthd++++++");
 		    String first = "电子委托单号："+jb.get("thorderno").toString();
-		    String remark = "下提货单成功";
+		    String remark = "点击详情，查看提货二维码。";
 		    LinkedHashMap<String, TemplateMessageItem> data = new LinkedHashMap<>();
 
 
@@ -111,7 +118,7 @@ public class SendMsgServiceImpl implements SendMsgService{
 		    TemplateMessageItem item5 = new TemplateMessageItem(jb.get("thrq").toString(), "#173177");
 		    data.put("keyword4", item5);
 		    data.put("first", new TemplateMessageItem(first, "#173177"));
-		    data.put("remark", new TemplateMessageItem(remark, "#173177"));
+		    data.put("remark", new TemplateMessageItem(remark, "#FF0000"));
 		    TemplateMessage template = new TemplateMessage();
 		    template.setData(data);
 		    template.setTemplate_id((String)retmap.get("templateid"));
@@ -185,10 +192,10 @@ public class SendMsgServiceImpl implements SendMsgService{
 
 	    TemplateMessageItem item1 = new TemplateMessageItem(jb.get("CusName").toString(), "#173177");
 	    data.put("keyword1", item1);
-	    TemplateMessageItem item2 = new TemplateMessageItem(jb.get("billid").toString(), "#173177");
+	    TemplateMessageItem item2 = new TemplateMessageItem(jb.get("stockno").toString(), "#173177");
 	    data.put("keyword2", item2);
 
-	    TemplateMessageItem item3 = new TemplateMessageItem(jb.get("stockno").toString(), "#173177");
+	    TemplateMessageItem item3 = new TemplateMessageItem(jb.get("billid").toString(), "#173177");
 	    data.put("keyword3", item3);
 
 	    TemplateMessageItem item4 = new TemplateMessageItem(jb.get("stockname").toString(), "#173177");

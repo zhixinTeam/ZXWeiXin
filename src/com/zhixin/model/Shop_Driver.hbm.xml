@@ -23,18 +23,17 @@
             <column name="Phone" />
         </property>
        
-       <set name="shoplinkuserdrivers"   table="shopLink_user_driver" inverse="true" >
-        	<!-- 执行多的表中的外键列的名字 -->
+       <set name="shoplinkcustomerdrivers"   table="shoplink_customer_driver" inverse="true" >
+        	
         	<key column="DriverID"></key>
-        	<!--指定映射类型  -->
-        	<one-to-many class="com.zhixin.model.ShopLink_User_Driver"/>
-        </set> 
+        	<one-to-many class="com.zhixin.model.ShopLink_Customer_Driver"/>
+        </set>  
         
-       <set name="shoporders"   table="shop_order" inverse="true" >
-        	<!-- 执行多的表中的外键列的名字 -->
+      <!--  <set name="shoporders"   table="shop_order" inverse="true" >
+        	执行多的表中的外键列的名字
         	<key column="DriverID"></key>
-        	<!--指定映射类型  -->
+        	指定映射类型 
         	<one-to-many class="com.zhixin.model.Shop_Order"/>
-        </set> 
+        </set>  -->
          </class>
 </hibernate-mapping>

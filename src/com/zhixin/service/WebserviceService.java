@@ -15,16 +15,18 @@ public interface WebserviceService {
 
 	public String update_bindfac(String parstr);
 
-	public String save_shopgoods(String params);
-
-	public String save_shopclients(String params);
-
 	public String updateget_shoporders(String params);
+	
+	/*public String save_shopgoods(String params);*/
 
-	public String updatecomplete_shoporders(String params);
+	
 
 	public String updateget_shoporderByNO(String params);
+	
+	public String updatecomplete_shoporders(String params);
 
 	public void saveeventMsg(X_Eventmsg x_eventmsg);
+
+	public String save_shopclients(String params);
 
 }

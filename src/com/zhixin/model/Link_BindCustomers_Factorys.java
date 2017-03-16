@@ -9,7 +9,7 @@ public class Link_BindCustomers_Factorys {
 
 	private Doc_Factory factory ;
 
-	private String clientNumber;
+	
 	
 	private Integer isbind;
 	
@@ -38,13 +38,7 @@ public class Link_BindCustomers_Factorys {
 		this.factory = factory;
 	}
 
-	public String getClientNumber() {
-		return clientNumber;
-	}
-
-	public void setClientNumber(String clientNumber) {
-		this.clientNumber = clientNumber;
-	}
+	
 
 	public Integer getIsbind() {
 		return isbind;

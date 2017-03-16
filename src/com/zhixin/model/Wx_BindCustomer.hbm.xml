@@ -25,28 +25,51 @@
             <column name="Status" />
         </property>
         
-        <property name="wxUserName" type="java.lang.String">
-            <column name="WxUserName" />
-        </property>
-        <property name="suserNumber" type="java.lang.String">
-            <column name="SuserNumber" />
-        </property>
         <property name="phone" type="java.lang.String">
             <column name="Phone" />
         </property>
+        
         <property name="email" type="java.lang.String">
-            <column name="email" />
+            <column name="Email" />
         </property>
         
+       <property name="password" type="java.lang.String">
+            <column name="Password" />
+        </property>
         
+        <property name="pc_password" type="java.lang.String">
+            <column name="Pc_Password" />
+        </property>
        
-         <set name="bindcustomer_factorys"   table="link_bindCustomers_factorys" inverse="true" >
+         <set name="bindcustomer_factorys"   table="link_bindCustomers_factorys" inverse="true" lazy="false">
         	<!-- 执行多的表中的外键列的名字 -->
         	<key column="BindcustomerID"></key>
         	<!--指定映射类型  -->
         	<one-to-many class="com.zhixin.model.Link_BindCustomers_Factorys"/>
         </set> 
         
+       <set name="shoplinkcustomerdrivers"   table="shoplink_customer_driver" inverse="true" lazy="false">
+        	
+        	<key column="BindcustomerID"></key>
+        	
+        	<one-to-many class="com.zhixin.model.ShopLink_Customer_Driver"/>
+        </set>  
+        
+        
+      <set name="shopclients"   table="shop_client" inverse="true" lazy="false">
+          <!--  	执行多的表中的外键列的名字 -->
+        	<key column="BindcustomerID"></key>
+        	<!--指定映射类型 -->
+        	<one-to-many class="com.zhixin.model.Shop_Client"/>
+        </set> 
+        
+            
+        <set name="shoporders"   table="shop_order" inverse="true"  lazy="false">
+        	<!--执行多的表中的外键列的名字-->
+        	<key column="BindcustomerID"></key>
+        	<!--指定映射类型 -->
+        	<one-to-many class="com.zhixin.model.Shop_Order"/>
+        </set>  
        
         
        </class>

@@ -11,10 +11,12 @@ import com.zhixin.dao.FactoryDao;
 import com.zhixin.entity.Json_Factory;
 import com.zhixin.entity.Json_AppPicture;
 import com.zhixin.entity.Json_Apppack;
+import com.zhixin.entity.Json_Doc_Factory;
 import com.zhixin.entity.Json_Sys_picture;
 import com.zhixin.model.App_pack;
 import com.zhixin.model.App_picture;
 import com.zhixin.model.Doc_Factory;
+import com.zhixin.model.Link_BindCustomers_Factorys;
 import com.zhixin.model.PageBean;
 import com.zhixin.model.Shop_Goods;
 import com.zhixin.model.Sys_Picture;
@@ -165,6 +167,75 @@ public class FactoryDaoImpl extends DaoSupportImpl<Doc_Factory> implements Facto
 		return list_json;
 	}
 
+	@Override
+	public List<Doc_Factory> findFactoryByComID(String companyid) {
+		// TODO Auto-generated method stub
+		Query query=getSession().createQuery("from Doc_Factory f where    f.doc_company.id='"+companyid+"' ");  //带条件的查询语句  
+		return query.list();
+	}
+
+	@Override
+	public List<Json_Doc_Factory> findFactoryByCompanyID(String companyid) {
+		// TODO Auto-generated method stub
+		Query query=getSession().createQuery("from Doc_Factory f where    f.doc_company.id='"+companyid+"' ");  //带条件的查询语句  
+		List<Doc_Factory> list=query.list();
+		List<Json_Doc_Factory> Listjson_Doc_Factory=new ArrayList<>();
+		for (Doc_Factory doc_Factory : list) {
+			Json_Doc_Factory json_Doc_Factory=new Json_Doc_Factory();
+			json_Doc_Factory.setCompanyId(companyid);
+			json_Doc_Factory.setFactoryName(doc_Factory.getFactoryname());
+			json_Doc_Factory.setId(doc_Factory.getId());
+			Listjson_Doc_Factory.add(json_Doc_Factory);
+		}
+		return Listjson_Doc_Factory;
+	}
+
+	@Override
+	public List<Json_Doc_Factory> findFactoryByCustomerId(String c_id) {
+		// TODO Auto-generated method stub
+		Query query=getSession().createQuery("from Link_BindCustomers_Factorys l where  l.bindcustomer.id='"+c_id+"' ");  //带条件的查询语句  
+		List<Link_BindCustomers_Factorys> list=query.list();
+		if(list.size()==0||list==null){
+			return null;
+		}else{
+			List<Doc_Factory> listDoc_Factory=new ArrayList<Doc_Factory>();
+			for (Link_BindCustomers_Factorys link_BindCustomers_Factorys : list) {
+				String id=link_BindCustomers_Factorys.getFactory().getId();
+				query=getSession().createQuery("from Doc_Factory d where  d.id='"+id+"' ");
+				Doc_Factory doc_factory=(Doc_Factory) query.uniqueResult();
+				listDoc_Factory.add(doc_factory);
+			}
+			List<Json_Doc_Factory> Listjson_Doc_Factory=new ArrayList<>();
+			for (Doc_Factory doc_Factory1 : listDoc_Factory) {
+				Json_Doc_Factory json_Doc_Factory=new Json_Doc_Factory();
+				json_Doc_Factory.setFactoryName(doc_Factory1.getFactoryname());
+				json_Doc_Factory.setId(doc_Factory1.getId());
+				Listjson_Doc_Factory.add(json_Doc_Factory);
+			}
+			return Listjson_Doc_Factory;
+			
+		}
+		
+	}
+
+	@Override
+	public List<Doc_Factory> findFactorysByCustomerId(String c_id) {
+		// TODO Auto-generated method stub
+		Query query=getSession().createQuery("from Link_BindCustomers_Factorys l where  l.bindcustomer.id='"+c_id+"' ");  //带条件的查询语句  
+		List<Link_BindCustomers_Factorys> list=query.list();
+		if(list.size()==0||list==null){
+			return null;
+		}else{
+			List<Doc_Factory> listDoc_Factory=new ArrayList<Doc_Factory>();
+			for (Link_BindCustomers_Factorys link_BindCustomers_Factorys : list) {
+			String id=link_BindCustomers_Factorys.getFactory().getId();
+			query=getSession().createQuery("from Doc_Factory d where  d.id='"+id+"' ");
+			Doc_Factory doc_factory=(Doc_Factory) query.uniqueResult();
+			listDoc_Factory.add(doc_factory);
+		}
+			return listDoc_Factory;
+	}
+	}
 	    
 	    
 

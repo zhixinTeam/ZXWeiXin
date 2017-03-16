@@ -10,26 +10,26 @@ import org.springframework.stereotype.Service;
 import com.zhixin.base.DaoSupportImpl;
 import com.zhixin.dao.shop.ShopDriverDao;
 import com.zhixin.entity.Json_Driver;
-import com.zhixin.model.ShopLink_User_Driver;
+import com.zhixin.model.ShopLink_Customer_Driver;
 import com.zhixin.model.Shop_Driver;
 import com.zhixin.model.Shop_Goods;
 import com.zhixin.model.Shop_Order;
-import com.zhixin.model.Shop_User;
+import com.zhixin.model.Wx_BindCustomer;
 @Service(value="shopdriverDao")
 public class ShopDriverDaoImpl extends DaoSupportImpl<Shop_Driver> implements ShopDriverDao{
 
 	@Override
-	public Shop_Driver saveDriver(Shop_Driver driver, String shopuserid) {
+	public Shop_Driver saveDriver(Shop_Driver driver, String wx_BindCustomerid) {
 		// TODO Auto-generated method stub
 		this.getSession().save(driver);
-		ShopLink_User_Driver link_user_driver = new ShopLink_User_Driver();
-		Shop_User shopuser=	(Shop_User) getSession().createQuery(//
-				"from Shop_User u where u.u_id=?")//
-				.setParameter(0, shopuserid)//
+		ShopLink_Customer_Driver link_customer_driver = new ShopLink_Customer_Driver();
+		Wx_BindCustomer wx_BindCustomer=	(Wx_BindCustomer) getSession().createQuery(//
+				"from Wx_BindCustomer u where u.id=?")//
+				.setParameter(0, wx_BindCustomerid)//
 				.uniqueResult();
-		link_user_driver.setShopuser(shopuser);
-		link_user_driver.setShopdriver(driver);
-		this.getSession().save(link_user_driver);
+		link_customer_driver.setWx_bindCustomer(wx_BindCustomer);
+		link_customer_driver.setShopdriver(driver);
+		this.getSession().save(link_customer_driver);
 		return driver;
 	}
 
@@ -51,7 +51,7 @@ public class ShopDriverDaoImpl extends DaoSupportImpl<Shop_Driver> implements Sh
 	@Override
 	public void deleteShoperDriver(String did,Shop_Driver driver) {
 		// TODO Auto-generated method stub
-		String hql = "delete ShopLink_User_Driver where DriverID ='"+did+"'";
+		String hql = "delete ShopLink_Customer_Driver where DriverID ='"+did+"'";
 		Query query=getSession().createQuery(hql);
 		query.executeUpdate();
 		getSession().delete(driver);
@@ -76,7 +76,6 @@ public class ShopDriverDaoImpl extends DaoSupportImpl<Shop_Driver> implements Sh
 	@Override
 	public void updateShoperDriver(Shop_Driver driver) {
 		// TODO Auto-generated method stub
-		
 		getSession().update(driver);
 	}
 

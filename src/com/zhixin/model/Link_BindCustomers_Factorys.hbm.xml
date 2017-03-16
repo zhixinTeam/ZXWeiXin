@@ -15,9 +15,7 @@
         <!-- cascade 设定级联操作. 开发时不建议设定该属性. 建议使用手工的方式来处理 -->
         <!-- order-by 在查询时对集合中的元素进行排序, order-by 中使用的是表的字段名, 而不是持久化类的属性名  -->
          
-        <property name="clientNumber" type="java.lang.String">
-            <column name="ClientNumber" />
-        </property>
+       
          <property name="isbind" type="java.lang.Integer">
             <column name="IsBind" />
         </property>

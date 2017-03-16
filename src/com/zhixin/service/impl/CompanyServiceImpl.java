@@ -96,6 +96,12 @@ public class CompanyServiceImpl  implements CompanyService{
 		TokenManager.init(app_id, com.getSecrectid());
 		return TokenManager.getToken(app_id);
 	}
+
+	@Override
+	public Doc_Company findCompanyByOriginalID(String originalID) {
+		// TODO Auto-generated method stub
+		return companydao.findCompanyByOriginalID(originalID);
+	}
 	
 	
 	

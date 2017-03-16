@@ -48,7 +48,7 @@ public class SendMsgManagerListener  implements ServletContextListener{
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				
+				System.out.println("告诉我TokenManager.getDefaultToken()是什么++++++++++++++++++++++"+TokenManager.getDefaultToken());
 				 if(TokenManager.getDefaultToken() !=null){
 					 sendmsgListener.sendMesg(sendmsgservice);	
 				 }
@@ -92,6 +92,7 @@ public class SendMsgManagerListener  implements ServletContextListener{
 		 
 		
 		try{
+			System.out.println("开始修改模板消息的状态++++++++++++++++++++++++++++++");
 			sendmsgservice.update_sendMsgService();
 		}catch(Exception e){
 			e.printStackTrace();

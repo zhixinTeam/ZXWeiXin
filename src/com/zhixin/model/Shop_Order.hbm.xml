@@ -32,8 +32,9 @@
             <column name="fac_order_no" />
         </property>
         
-       <many-to-one name="shopuser" class="com.zhixin.model.Shop_User" 
-			column="UserID"  cascade="all"></many-to-one>
+       <many-to-one name="bindcustmoer" class="com.zhixin.model.Wx_BindCustomer" 
+			column="BindcustomerID"  cascade="all"></many-to-one>
+      
        
        <many-to-one name="shopdriver" class="com.zhixin.model.Shop_Driver" 
 			column="DriverID" lazy="false"  cascade="all"></many-to-one>

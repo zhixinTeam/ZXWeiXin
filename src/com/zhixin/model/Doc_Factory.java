@@ -52,7 +52,6 @@ public class Doc_Factory implements Serializable{
 	private Set<Sys_Role> sys_roles= new HashSet<>(); 
 	
 	
-	private Set<Link_BindCustomers_Factorys> bindcustomer_factorys = new HashSet<>() ;
 	
 	
 	private Set<Sys_Picture> sys_pictures= new HashSet<>(); 
@@ -60,9 +59,10 @@ public class Doc_Factory implements Serializable{
 	
 	private Set<Sys_User> sys_users = new HashSet<>();
 	
-	//private Set<Shop_Client> shopclients = new HashSet<>();
+	private Set<Shop_Client> shopclients = new HashSet<>();
 	//添加shop user 与factory关联
-	private Set<Shop_User> shopusers = new HashSet<>();
+	
+	private Set<Link_BindCustomers_Factorys> bindcustomer_factorys = new HashSet<>() ;
 	
 	
 	private Set<Shop_Order> shoporders = new HashSet<>();
@@ -78,6 +78,14 @@ public class Doc_Factory implements Serializable{
 	private Set<App_picture> app_pictures = new HashSet<>();
 	
 	
+
+	public Set<Link_BindCustomers_Factorys> getBindcustomer_factorys() {
+		return bindcustomer_factorys;
+	}
+
+	public void setBindcustomer_factorys(Set<Link_BindCustomers_Factorys> bindcustomer_factorys) {
+		this.bindcustomer_factorys = bindcustomer_factorys;
+	}
 
 	public Set<Shop_Order> getShoporders() {
 		return shoporders;
@@ -95,14 +103,14 @@ public class Doc_Factory implements Serializable{
 		this.shopgoods = shopgoods;
 	}
 
-	/*public Set<Shop_Client> getShopclients() {
+	public Set<Shop_Client> getShopclients() {
 		return shopclients;
 	}
 
 	public void setShopclients(Set<Shop_Client> shopclients) {
 		this.shopclients = shopclients;
 	}
-*/
+
 	public Set<Sys_User> getSys_users() {
 		return sys_users;
 	}
@@ -233,13 +241,13 @@ public class Doc_Factory implements Serializable{
 		this.editlog = editlog;
 	}
 
-	public Set<Link_BindCustomers_Factorys> getBindcustomer_factorys() {
-		return bindcustomer_factorys;
-	}
-
-	public void setBindcustomer_factorys(Set<Link_BindCustomers_Factorys> bindcustomer_factorys) {
-		this.bindcustomer_factorys = bindcustomer_factorys;
-	}
+//	public Set<Link_BindCustomers_Factorys> getBindcustomer_factorys() {
+//		return bindcustomer_factorys;
+//	}
+//
+//	public void setBindcustomer_factorys(Set<Link_BindCustomers_Factorys> bindcustomer_factorys) {
+//		this.bindcustomer_factorys = bindcustomer_factorys;
+//	}
 
 	public Integer getIs_bind() {
 		return is_bind;
@@ -273,13 +281,7 @@ public class Doc_Factory implements Serializable{
 		this.app_pictures = app_pictures;
 	}
 
-	public Set<Shop_User> getShopusers() {
-		return shopusers;
-	}
-
-	public void setShopusers(Set<Shop_User> shopusers) {
-		this.shopusers = shopusers;
-	}
+	
 
 	/*public String getIpurl() {
 		return ipurl;

@@ -49,13 +49,6 @@ public class ShopOrderDaoImpl extends DaoSupportImpl<Shop_Order> implements Shop
 		
 	}
 
-	/*@Override
-	public void saveShopOrder(Shop_Order shop_order, String factoryid) {
-		// TODO Auto-generated method stub
-		this.getSession().save(shop_order);
-		Query query = getSession().createSQLQuery("update shop_order o   set o.FactoryID= '"+factoryid+"'   where o.o_id= '"+shop_order.getO_id()+"' ");
-		query.executeUpdate();
-	}*/
 
 	@Override
 	public void saveShopOrder(String o_id, String factoryid,String c_id,String g_id) {

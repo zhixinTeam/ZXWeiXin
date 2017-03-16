@@ -23,15 +23,18 @@
         
         
        <set name="shoporders"   table="shop_order" inverse="true" >
-        	<!-- 执行多的表中的外键列的名字 -->
+        	<!-- 执行多的表中的外键列的名字-->
         	<key column="clientID"></key>
-        	<!--指定映射类型  -->
+        	<!--指定映射类型 -->
         	<one-to-many class="com.zhixin.model.Shop_Order"/>
-        </set> 
-        <many-to-one name="shopuser" class="com.zhixin.model.Shop_User" 
-			column="UserID"  cascade="all"></many-to-one>
-         <!-- 
+        </set>  
+      
+      
+      <many-to-one name="bindcustmoer" class="com.zhixin.model.Wx_BindCustomer" 
+			column="BindcustomerID"  cascade="all"></many-to-one>
+      
+        
          <many-to-one name="doc_factory" class="com.zhixin.model.Doc_Factory"   lazy="false" update="false"  cascade="all"   column="FactoryID"></many-to-one>
-    -->
+   
     </class>
 </hibernate-mapping>

@@ -1,6 +1,7 @@
 package com.zhixin.controller;
 
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
@@ -27,6 +29,7 @@ import com.zhixin.interceptor.Token;
 import com.zhixin.model.App_activity;
 import com.zhixin.model.App_pack;
 import com.zhixin.model.App_picture;
+import com.zhixin.model.Doc_Company;
 import com.zhixin.model.Doc_Factory;
 import com.zhixin.model.PageBean;
 import com.zhixin.model.Sys_Picture;
@@ -35,8 +38,10 @@ import com.zhixin.model.Wx_BindCustomer;
 import com.zhixin.model.X_Eventmsg;
 import com.zhixin.right_utils.Const;
 import com.zhixin.right_utils.PageData;
+import com.zhixin.right_utils.PathUtil;
 import com.zhixin.service.ApppackService;
 import com.zhixin.service.ApppictureService;
+import com.zhixin.service.CompanyService;
 import com.zhixin.service.FactoryService;
 import com.zhixin.service.PicturesService;
 import com.zhixin.service.SendMsgService;
@@ -69,6 +74,9 @@ public class WxBindCustomerController  extends BaseController{
 	
 	@Resource(name="apppackService")
 	private ApppackService apppackService;
+	
+	@Resource(name="companyService")
+	private CompanyService companyService;
 	/**
 	 * 去修改绑定页面
 	 */
@@ -117,99 +125,17 @@ public class WxBindCustomerController  extends BaseController{
 		return mv;
 	}
 	
-	
-	
-	/**
-	 * 保存访问手机首页
-	 * @return
-	 */
-	@RequestMapping(value="/phone_index")
-	public ModelAndView toLogin()throws Exception{
-		logBefore(logger, "WxBindCustomerController_phone_index");
-		ModelAndView mv = this.getModelAndView();
-		PageData pd = new PageData();
-		pd = this.getPageData();
-		try{
-			Subject currentUser = SecurityUtils.getSubject();
-			Session session = currentUser.getSession();
-			String pd_wx_token=pd.getString("wx_token");
-			String wx_token =(String)session.getAttribute("wx_token");
-			String flagID =pd.getString("id");
-			String factory_IDs =pd.getString("factory_IDs");
-			//String wxusername = pd.getString("wxusername");
-			String originalID =pd.getString("originalID");
-			String phone  =pd.getString("phone");
-			String openid =pd.getString("openid");
-			String email =pd.getString("email");
-			String namepinyin =pd.getString("username");
-			String old_facids_str =pd.getString("old_facids_str");
-			String [] arrayids=factory_IDs.split(",");
-			String factory_ID ="";
-			List <Doc_Factory> listfactorys= factoryService.findFactorysByIDS(arrayids);
-			Set setfac=new HashSet<Doc_Factory>(listfactorys);
-			if("".equals(flagID)){
-				Wx_BindCustomer wx_bind = new Wx_BindCustomer();
-				wx_bind.setBinddate(TimestampUtil.getnowtime());
-				wx_bind.setStatus(0);
-				wx_bind.setEmail(email);
-				//wx_bind.setBindcustomer_factorys(bindcustomer_factorys);
-				//wx_bind.setFactory(factory);
-				//TODO 关联对象修改
-				//wx_bind.setFactorys(setfac);
-				wx_bind.setNamepinyin(namepinyin);
-				wx_bind.setOpenid(openid);
-				wx_bind.setPhone(phone);
-				//wx_bind.setWxUserName(wxusername);
-				if(pd_wx_token.equals(wx_token)){
-					session.removeAttribute("wx_token");
-					wxbindcustomerService.save_wxbindUser(wx_bind,listfactorys);
-				}
-			}
-			else{
-				Wx_BindCustomer new_wx_bind =wxbindcustomerService.findwxbindcustomerByID(flagID);
-				new_wx_bind.setEmail(email);
-				//已经绑定的，不从新关联;
-				//TODO 关联对象修改
-				//new_wx_bind.setFactorys(setfac);
-				new_wx_bind.setNamepinyin(namepinyin);
-				new_wx_bind.setOpenid(openid);
-				new_wx_bind.setPhone(phone);
-				//new_wx_bind.setWxUserName(wxusername);
-				if(pd_wx_token.equals(wx_token)){
-					session.removeAttribute( "wx_token");
-					wxbindcustomerService.update_wxbindUser(new_wx_bind,listfactorys,old_facids_str);
-				}
-			}
-			List<Sys_Picture> listpictures =picturesService.findPicturesByFactoryids(arrayids);
-			for(Sys_Picture picture:listpictures){
-				if(picture.getFlag()==1){
-					listpictures.remove(picture);
-					mv.addObject("picturelog",picture);
-					break;
-				}
-			}
-			//pd.put("fromUserName", pd.getString("openid"));
-			pd.put("fromUserName", openid);
-			pd.put("toUserName", originalID);
-			mv.addObject("listpictures",listpictures);
-			mv.addObject("pd",pd);
-			mv.setViewName("tinybar/wxadmin/index");
-		} catch(Exception e){
-			logger.error(e.toString(), e);
-		}
-		return mv;
-	}
-	
 	/**
 	 * 注册
 	 * @param restar
 	 * @param response
 	 */
 	@RequestMapping(value="/register")
-	public void register(HttpServletResponse response)throws Exception{
+	public void register(HttpServletResponse response,HttpServletRequest request)throws Exception{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
+		
 		try{
 			Subject currentUser = SecurityUtils.getSubject();
 			Session session = currentUser.getSession();
@@ -217,52 +143,51 @@ public class WxBindCustomerController  extends BaseController{
 			String wx_token =(String)session.getAttribute("wx_token");
 			String flagID =pd.getString("id");
 			String factory_IDs =pd.getString("factory_IDs");
-			//String wxusername = pd.getString("wxusername");
 			String originalID =pd.getString("originalID");
 			String phone  =pd.getString("phone");
 			String openid =pd.getString("openid");
-			String email =pd.getString("email");
 			String namepinyin =pd.getString("username");
-			String old_facids_str =pd.getString("old_facids_str");
 			String [] arrayids=factory_IDs.split(",");
 			String factory_ID ="";
 			List <Doc_Factory> listfactorys= factoryService.findFactorysByIDS(arrayids);
+			Doc_Company company =companyService.findCompanyByOriginalID(originalID);
 			Set setfac=new HashSet<Doc_Factory>(listfactorys);
-			if("".equals(flagID)){
-				Wx_BindCustomer wx_bind = new Wx_BindCustomer();
-				wx_bind.setBinddate(TimestampUtil.getnowtime());
-				wx_bind.setStatus(0);
-				wx_bind.setEmail(email);
-				//wx_bind.setBindcustomer_factorys(bindcustomer_factorys);
-				//wx_bind.setFactory(factory);
-				//TODO 关联对象修改
-				//wx_bind.setFactorys(setfac);
-				wx_bind.setNamepinyin(namepinyin);
-				wx_bind.setOpenid(openid);
-				wx_bind.setPhone(phone);
-				//wx_bind.setWxUserName(wxusername);
-				if(pd_wx_token.equals(wx_token)){
-					session.removeAttribute("wx_token");
-					wxbindcustomerService.save_wxbindUser(wx_bind,listfactorys);
+			String pwd =phone.substring(phone.length()-6, phone.length());
+			//if(pd_wx_token.equals(wx_token)){
+				if("".equals(flagID)){
+					Wx_BindCustomer wx_bind = new Wx_BindCustomer();
+					wx_bind.setBinddate(TimestampUtil.getnowtime());
+					wx_bind.setStatus(0);
+					//wx_bind.setBindcustomer_factorys(bindcustomer_factorys);
+					//wx_bind.setFactory(factory);
+					//TODO 关联对象修改
+					//wx_bind.setFactorys(setfac);
+					wx_bind.setNamepinyin(namepinyin);
+					wx_bind.setOpenid(openid);
+					wx_bind.setPassword(new SimpleHash("SHA-1", namepinyin+company.getId(), pwd).toString());
+					wx_bind.setPc_password(new SimpleHash("SHA-1", namepinyin, pwd).toString());
+					wx_bind.setPhone(phone);
+					//wx_bind.setWxUserName(wxusername);
+					if(pd_wx_token.equals(wx_token)){
+						session.removeAttribute("wx_token");
+						wxbindcustomerService.save_wxbindUser(wx_bind,listfactorys);
+					}
 				}
-			}
-			else{
-				Wx_BindCustomer new_wx_bind =wxbindcustomerService.findwxbindcustomerByID(flagID);
-				new_wx_bind.setEmail(email);
-				//已经绑定的，不从新关联;
-				//TODO 关联对象修改
-				//new_wx_bind.setFactorys(setfac);
-				new_wx_bind.setNamepinyin(namepinyin);
-				new_wx_bind.setOpenid(openid);
-				new_wx_bind.setPhone(phone);
-				//new_wx_bind.setWxUserName(wxusername);
-				if(pd_wx_token.equals(wx_token)){
-					session.removeAttribute( "wx_token");
-					wxbindcustomerService.update_wxbindUser(new_wx_bind,listfactorys,old_facids_str);
+				else{
+					Wx_BindCustomer new_wx_bind =wxbindcustomerService.findwxbindcustomerByID(flagID);
+					//已经绑定的，不从新关联;
+					//TODO 关联对象修改
+					new_wx_bind.setNamepinyin(namepinyin);
+					new_wx_bind.setOpenid(openid);
+					new_wx_bind.setPhone(phone);
+					new_wx_bind.setPassword(new SimpleHash("SHA-1", namepinyin+company.getId(), pwd).toString());
+					if(pd_wx_token.equals(wx_token)){
+						session.removeAttribute( "wx_token");
+						wxbindcustomerService.update_wxbindUser(new_wx_bind,listfactorys);
+					}
 				}
-			}
-			
-			
+				
+			//}
 			List list1 = new ArrayList<>();
 		    JSONArray arr = JSONArray.fromObject(list1);
 			PrintWriter out;
@@ -287,7 +212,29 @@ public class WxBindCustomerController  extends BaseController{
 		
 	
 	
-	
+	/**
+	 * 判断用户名是否存在
+	 */
+	@RequestMapping(value="/hasU")
+	public void hasU(PrintWriter out){
+		logBefore(logger, "SysUserController_hasU");
+		PageData pd = new PageData();
+		try{
+			pd = this.getPageData();
+			String newusername =pd.getString("newusername");
+			if(wxbindcustomerService.findByUSername(newusername) != null){
+				out.write("error");
+			}else{
+				out.write("success");
+			}
+			out.close();
+		} catch(Exception e){
+			logger.error(e.toString(), e);
+		}finally {
+			logAfter(logger);
+		}
+		
+	}
 	
 	
 	
@@ -495,11 +442,13 @@ public class WxBindCustomerController  extends BaseController{
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
+		JSONObject jo = new JSONObject();
 		try{
 			String fromUserName = pd.getString("fromUserName");
 			String toUserName = pd.getString("toUserName");
-			//String fromUserName="o2hr-wnlVRxI7-qGpOqF7QiI0Jdo";
-			//String toUserName="gh_ff3274e356d3";
+			
+			//String fromUserName="oKeyUxEgSYnl1j1d0bt_cwJsIdMo";
+			//String toUserName="gh_d6c13daeefce";
 			String openid = fromUserName;
 			//防止重复提交
 			Subject currentUser = SecurityUtils.getSubject();
@@ -512,26 +461,22 @@ public class WxBindCustomerController  extends BaseController{
 			List<Doc_Factory> oldfactorys =     wxbindcustomerService.findFactoryByOpenID(openid);
 			//获取绑定账号
 			Wx_BindCustomer wx_bindcustomer = wxbindcustomerService.findwxbindcustomerByOpenID(openid);
+			System.out.println(wx_bindcustomer.getNamepinyin()+"存在不存在");
+			System.out.println(wx_bindcustomer.getNamepinyin()+"存在不存在");
 			String originalID =toUserName;  //集团的原始id
 			List<Doc_Factory>  factoryList=wxbindcustomerService.findFactoryByOriginalID(originalID);
-			//pd.put("wxusername", wx_bindcustomer.getWxUserName());
-			pd.put("susernumber", wx_bindcustomer.getSuserNumber());
+			System.out.println(factoryList.size());
+			if(wx_bindcustomer.getNamepinyin()!=null){
+				request.setAttribute("message", "oldsuccess");
+			}else{
+				request.setAttribute("message", "success");
+			}
 			pd.put("phone", wx_bindcustomer.getPhone());
-			pd.put("email", wx_bindcustomer.getEmail());
 			pd.put("id", wx_bindcustomer.getId());
 			pd.put("wx_token", wx_token);
 			pd.put("username", wx_bindcustomer.getNamepinyin());
-			//把已关注的工厂id 
-			String old_facids_str ="";
-			for(Doc_Factory fac:oldfactorys){
-				if(fac.getIs_bind()==1){
-					old_facids_str+=fac.getId();
-				}
-			}
-			pd.put("old_facids_str", old_facids_str);
 			pd.put("fromUserName", openid);
 			pd.put("toUserName", toUserName);
-
 			mv.setViewName("weixin/appuser/appuser_rest");
 			mv.addObject("msg", "saveU");
 			mv.addObject("pd", pd);
@@ -638,13 +583,24 @@ public class WxBindCustomerController  extends BaseController{
 					"</tr>"+
 					"<tr class=\"success\">"+
 						"<td>订单编号：</td>"+
-						"<td>"+jb.get("billid").toString()+"</td>"+
+						"<td>"+jb.get("stockno").toString()+"</td>"+
 					"</tr>"+
 					"<tr class=\"warning\">"+
 						"<td>物料名称：</td>"+
 						"<td>"+jb.get("stockname").toString()+"</td>"+
 					"</tr>"+
 				"</table>";
+			//提货通知单
+			}else if("5".equals(type)){
+				String thorderno =jb.get("thorderno").toString()+".png";
+				String filePath = PathUtil.getClasspath() + Const.FILEPATHTWODIMENSIONCODE + thorderno;  //存放路径
+				File file = new File(filePath);
+				if(file.exists()){
+					filePath ="http://www.hnzxtech.cn/wxplatform/uploadFiles/twoDimensionCode/"+thorderno;
+				}else
+					filePath ="http://www.hnzxtech.cn/wxplatform/uploadFiles/twoDimensionCode/"+"404.jpg";
+				
+				html_str="<div align='center'><img src='"+filePath+"' alt='提货二维码' /></div>";
 			//报表
 			}else{
 				html_str+="无数据！";

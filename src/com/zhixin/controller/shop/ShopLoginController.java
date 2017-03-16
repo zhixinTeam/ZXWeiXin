@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -24,18 +25,24 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSON;
 import com.zhixin.base.BaseController;
 import com.zhixin.entity.Json_Client;
+import com.zhixin.entity.Json_Doc_Factory;
+import com.zhixin.entity.Json_Driver;
 import com.zhixin.entity.Json_Goods;
 import com.zhixin.model.Doc_Factory;
-import com.zhixin.model.Shop_User;
+import com.zhixin.model.Shop_Client;
 import com.zhixin.model.Sys_Role;
 import com.zhixin.model.Sys_User;
+import com.zhixin.model.Wx_BindCustomer;
 import com.zhixin.right_utils.AppUtil;
 import com.zhixin.right_utils.Const;
 import com.zhixin.right_utils.DateUtil;
 import com.zhixin.right_utils.PageData;
 import com.zhixin.right_utils.Tools;
+import com.zhixin.service.FactoryService;
+import com.zhixin.service.WxBindCustomerService;
 import com.zhixin.service.shop.ShopUserService;
 import com.zhixin.tools.MobileMessageSend;
+import com.zhixin.tools.TimestampUtil;
 import com.zhixin.tools.TokenProccessor;
 
 import net.sf.json.JSONArray;
@@ -46,11 +53,15 @@ import net.sf.json.JSONObject;
 @RequestMapping(value="/shop")
 public class ShopLoginController extends BaseController{
 
+	@Resource(name="factoryService")
+	private FactoryService factoryService;
+	
 	
 	@Resource(name="shopuserService")
 	private ShopUserService shopuserService;
 	
-	
+	@Resource(name="wxbindcustomerService")
+	private  WxBindCustomerService wxbindcustomerService;
 	/**
 	 * 获取登录用户的IP
 	 * @throws Exception 
@@ -69,182 +80,63 @@ public class ShopLoginController extends BaseController{
 	} 
 	
 	
+	
+	
+	
+	
+	
+	
+	/**
+	 * 车辆管理页面
+	 * @return
+	 */
+	@RequestMapping(value="/totjsja")
+	public ModelAndView toTjsj(HttpServletRequest request)throws Exception{
+		logBefore(logger, "LoginController_login_totjsja");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		Subject currentUser = SecurityUtils.getSubject();
+		Session session = currentUser.getSession();
+		Wx_BindCustomer wx_BindCustomer=(Wx_BindCustomer) session.getAttribute(Const.SESSION_CLIENTUSER);
+		pd =this.getPageData();
+		pd.put("SYSNAME", Tools.readTxtFile(Const.SYSNAME)); //读取系统名称
+		String uuid=get32UUID().toString();
+		request.setAttribute("token", uuid);
+		HttpSession ss=(HttpSession)request.getSession();
+		ss.setAttribute("token", uuid);
+		mv.addObject("pd",pd);
+		mv.addObject("wx_BindCustomer",wx_BindCustomer);
+		mv.setViewName("shop_pc/user/tjsja");
+		return mv;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * 访问商城主页
 	 * @return
 	 */
-	@RequestMapping(value="/shop")
+	@RequestMapping(value="/toindex")
 	public ModelAndView toIndex()throws Exception{
-		logBefore(logger, "LoginController_login_toLogin");
+		logBefore(logger, "LoginController_login_toIndex");
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd =this.getPageData();
-		Subject currentUser = SecurityUtils.getSubject();
-		Session session = currentUser.getSession();
-		
-		Shop_User shopuser = (Shop_User) session.getAttribute(Const.SESSION_SHOPUSER);
-		if(shopuser !=null){
-			Shop_User shopuserr = (Shop_User) session.getAttribute(Const.SESSION_SHOPUSERROL);
-			if(null == shopuserr){
-				session.setAttribute(Const.SESSION_SHOPUSERROL, shopuser);
-			}else{
-				shopuser =shopuserr;
-			}
-			
-			mv.addObject("shopuser",shopuser);
-		}
-		
 		pd.put("SYSNAME", Tools.readTxtFile(Const.SYSNAME)); //读取系统名称
 		mv.addObject("pd",pd);
-		mv.setViewName("shop/login/index");
+		mv.setViewName("shop_pc/login/index");
 		return mv;
 	}
 	
 	
 	
-	/**
-	 * 访问商城主页
-	 * @return
-	 */
-	@RequestMapping(value="/edit_pwd")
-	public ModelAndView edit_pwd()throws Exception{
-		logBefore(logger, "LoginController_login_toLogin");
-		ModelAndView mv = this.getModelAndView();
-		PageData pd = new PageData();
-		pd =this.getPageData();
-		Subject currentUser = SecurityUtils.getSubject();
-		Session session = currentUser.getSession();
-		Shop_User shopuser = (Shop_User) session.getAttribute(Const.SESSION_SHOPUSER);
-		if(shopuser !=null){
-			Shop_User shopuserr = (Shop_User) session.getAttribute(Const.SESSION_SHOPUSERROL);
-			if(null == shopuserr){
-				session.setAttribute(Const.SESSION_SHOPUSERROL, shopuser);
-			}else{
-				shopuser =shopuserr;
-			}
-			
-			mv.addObject("shopuser",shopuser);
-		}
-		
-		pd.put("SYSNAME", Tools.readTxtFile(Const.SYSNAME)); //读取系统名称
-		mv.addObject("pd",pd);
-		mv.setViewName("shop/login/edit_pwd");
-		return mv;
-	}
-	
-	
-	
-	/**
-	 * 根据phone 获取验证码
-	 */
-	@RequestMapping(value="/find_code")
-	public void find_code(HttpServletResponse response){
-		logBefore(logger, "SysUserController_deleteU");
-		PageData pd = new PageData();
-		try{
-			pd = this.getPageData();
-			Subject currentUser = SecurityUtils.getSubject();
-			Session session = currentUser.getSession();
-			String resu =MobileMessageSend.sendMsg(pd.getString("username"));
-			String obj=JSON.parseObject(resu).getString("obj");
-			String code=JSON.parseObject(resu).getString("code");
-			 JSONObject jo = new JSONObject();
-			 jo.put("code",code);
-			 jo.put("obj", obj);
-			 session.setAttribute("old_code", obj);
-			 PrintWriter out;
-			 response.setCharacterEncoding("utf-8");
-			 out = response.getWriter();
-			 out.write("");
-			 out.flush();
-			 out.close();
-		} catch(Exception e){
-			logger.error(e.toString(), e);
-		}finally {
-			logAfter(logger);
-		}
-		
-	}
-	
-	/**
-	 * 根据phone 修改密码
-	 */
-	@RequestMapping(value="/save_pwd")
-	public void save_pwd(HttpServletResponse response,HttpServletRequest request){
-		logBefore(logger, "SysUserController_deleteU");
-		PageData pd = new PageData();
-		try{
-			pd = this.getPageData();
-			Subject currentUser = SecurityUtils.getSubject();
-			Session session = currentUser.getSession();
-			String code =pd.getString("code");
-			String err_str="密码修改成功";
-			String old_code= (String) session.getAttribute("old_code");
-			//String old_code="1234";
-			String username =pd.getString("username");
-			String password =pd.getString("password");
-			String factoryid=request.getParameter("factoryid");
-			Shop_User shopuser =shopuserService.findShopUserByUsername(username,factoryid);
-			if(shopuser ==null){
-				err_str="用户名不存在!";
-			}else{
-				if(!code.equals(old_code))
-					err_str="验证码失效，请再次获取";
-				else{
-					String passwd = new  SimpleHash("SHA-1",username+factoryid,password).toString();
-					shopuserService.updateShopUserPwd(username, passwd, factoryid);
-				}
-			}
-			
-			session.removeAttribute("old_code");
-			List<String> list_str= new ArrayList<>();
-			PrintWriter out;
-			response.setCharacterEncoding("utf-8");
-			out = response.getWriter();
-			list_str.add(err_str);
-			JSONObject jo = new JSONObject();
-			jo.put("err_str",err_str);
-			out.write(jo.toString());
-			out.flush();
-			out.close();
-		} catch(Exception e){
-			logger.error(e.toString(), e);
-		}finally {
-			logAfter(logger);
-		}
-		
-	}
-	
-	
-	
-	/**
-	 * 访问运营页面
-	 * @return
-	 */
-	@RequestMapping(value="/process")
-	public ModelAndView process()throws Exception{
-		logBefore(logger, "LoginController_login_toLogin");
 
-		Subject currentUser = SecurityUtils.getSubject();
-		Session session = currentUser.getSession();
-		Shop_User shopuser = (Shop_User) session.getAttribute(Const.SESSION_SHOPUSER);
-		if(shopuser !=null){
-			Shop_User shopuserr = (Shop_User) session.getAttribute(Const.SESSION_SHOPUSERROL);
-			if(null == shopuserr){
-				session.setAttribute(Const.SESSION_SHOPUSERROL, shopuser);
-			}else{
-				shopuser =shopuserr;
-			}
-		}
-		ModelAndView mv = this.getModelAndView();
-		PageData pd = new PageData();
-		pd =this.getPageData();
-		mv.addObject("pd",pd);
-		mv.addObject("shopuser",shopuser);
-		mv.setViewName("shop/login/process");
-		return mv;
-	}
-	
 	
 	/**
 	 * 访问登录页面
@@ -258,112 +150,266 @@ public class ShopLoginController extends BaseController{
 		pd =this.getPageData();
 		pd.put("SYSNAME", Tools.readTxtFile(Const.SYSNAME)); //读取系统名称
 		mv.addObject("pd",pd);
-		mv.setViewName("shop/login/login-page");
+		mv.setViewName("shop_pc/login/login");
 		return mv;
 	}
+	
+	/**
+	 * 访问登录页面
+	 * @return
+	 */
+	@RequestMapping(value="/toxgmm")
+	public ModelAndView toUpdatePassword()throws Exception{
+		logBefore(logger, "LoginController_login_toLogin");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd =this.getPageData();
+		pd.put("SYSNAME", Tools.readTxtFile(Const.SYSNAME)); //读取系统名称
+		mv.addObject("pd",pd);
+		mv.setViewName("shop_pc/user/xgmm");
+		return mv;
+	}
+	
+	/**
+	 * 开始修改密码
+	 * @param response
+	 * @param request
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@RequestMapping("/updatePassword")
+	public void updatePassword( HttpServletResponse response,HttpServletRequest request) throws Exception {
+		
+		    response.setHeader("P3P","CP=CAO PSA OUR"); 
+		    JSONObject jo = new JSONObject();
+		    Subject currentUser = SecurityUtils.getSubject();
+			Session session = currentUser.getSession();
+			Wx_BindCustomer wx_BindCustomer=(Wx_BindCustomer) session.getAttribute(Const.SESSION_CLIENTUSER);
+			if(wx_BindCustomer==null){
+				jo.put("msg", "error");
+			}else{
+				String companyid=request.getParameter("companyid");
+				String password=request.getParameter("password");
+				String username=wx_BindCustomer.getNamepinyin();
+				if(wx_BindCustomer.getPassword()==null){
+					String passwd = new  SimpleHash("SHA-1",username,password).toString();
+					wx_BindCustomer.setPassword(passwd);	
+				}
+				shopuserService.updateWx_BindCustomerPassword(wx_BindCustomer);
+				jo.put("msg", "success");
+			}
+			
+			
+			 PrintWriter out;
+			 response.setContentType("application/json;charset=utf-8");
+			 response.setCharacterEncoding("utf-8");
+			 out = response.getWriter();
+			 out.write(jo.toString());
+			 out.flush();
+			 out.close();
+		
+	}
+	
+
+	
+	
+	
+	/**
+	 *
+	 * 到公共内容
+	 *
+	 */
+	@ResponseBody
+	@RequestMapping("/tocommon")
+	public void common( HttpServletResponse response,HttpServletRequest request) throws Exception {
+		
+		response.setHeader("P3P","CP=CAO PSA OUR");
+		JSONObject jo = new JSONObject();
+		PageData pd = new PageData();
+		try {
+			pd=this.getPageData();
+			Subject currentUser = SecurityUtils.getSubject();
+			Session session = currentUser.getSession();
+			Wx_BindCustomer wx_BindCustomer= (Wx_BindCustomer) session.getAttribute(Const.SESSION_CLIENTUSER);
+			if(wx_BindCustomer==null)
+				jo.put("msg", "error");	
+			else {
+				List<Json_Doc_Factory> list_Json_Doc_Factory=factoryService.findFactoryByCustomerId(wx_BindCustomer.getId());
+				if(list_Json_Doc_Factory.size()==0||list_Json_Doc_Factory==null){
+					jo.put("msg", "err");	
+				}else{
+					jo.put("list_Json_Doc_Factory", list_Json_Doc_Factory);
+					jo.put("msg", "success");	
+				}
+				}
+			
+			}catch(Exception e) {
+				e.printStackTrace();
+				jo.put("msg", "err");
+			}finally{
+				PrintWriter out;
+				 response.setContentType("application/json;charset=utf-8");
+				 response.setCharacterEncoding("utf-8");
+				 out = response.getWriter();
+				 out.write(jo.toString());
+				 out.flush();
+				 out.close();
+			}
+			 
+		
+	}
+	
+	
+	
+	
+	/**
+	 * 访问注册页面
+	 * @return
+	 */
+	@RequestMapping(value="/toregister")
+	public ModelAndView toregister()throws Exception{
+		logBefore(logger, "LoginController_toregister");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd =this.getPageData();
+		pd.put("SYSNAME", Tools.readTxtFile(Const.SYSNAME)); //读取系统名称
+		mv.addObject("pd",pd);
+		mv.setViewName("shop_pc/login/register");
+		return mv;
+	}
+	
+	
+	/**
+	 * 开始注册用户
+	 * @param response
+	 * @param request
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@RequestMapping("/register")
+	public void beginregister( HttpServletResponse response,HttpServletRequest request) throws Exception {
+		
+		    response.setHeader("P3P","CP=CAO PSA OUR"); 
+		    JSONObject jo = new JSONObject();
+		    Subject currentUser = SecurityUtils.getSubject();
+			Session session = currentUser.getSession();
+			Wx_BindCustomer wx_BindCustomer=new Wx_BindCustomer();
+				String phone=request.getParameter("phone");
+				String email=request.getParameter("email");
+				String password=request.getParameter("password");
+				String username=request.getParameter("username");
+				String passwd = new  SimpleHash("SHA-1",username,password).toString();
+				String id=this.get32UUID();
+				wx_BindCustomer.setPc_password(passwd);
+				wx_BindCustomer.setNamepinyin(username);
+				wx_BindCustomer.setEmail(email);
+				wx_BindCustomer.setPhone(phone);
+				wx_BindCustomer.setBinddate(TimestampUtil.getnowtime());
+				wx_BindCustomer.setId(id);
+				wx_BindCustomer.setStatus(0);
+				wx_BindCustomer.setOpenid(null);
+				wxbindcustomerService.saveCustomer(wx_BindCustomer);
+				jo.put("msg", "success");
+			
+			 PrintWriter out;
+			 response.setContentType("application/json;charset=utf-8");
+			 response.setCharacterEncoding("utf-8");
+			 out = response.getWriter();
+			 out.write(jo.toString());
+			 out.flush();
+			 out.close();
+		
+	}
+	
+	
+	
+	/**
+	 * 访问注册页面
+	 * @return
+	 */
+	@RequestMapping(value="/toadd")
+	public ModelAndView toadd()throws Exception{
+		logBefore(logger, "LoginController_toregister");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd =this.getPageData();
+		pd.put("SYSNAME", Tools.readTxtFile(Const.SYSNAME)); //读取系统名称
+		mv.addObject("pd",pd);
+		mv.setViewName("shop_pc/user/add");
+		return mv;
+	}
+	
+	/**
+	 * 访问注册页面
+	 * @return
+	 */
+	@RequestMapping(value="/toxgsj")
+	public ModelAndView toxgsj()throws Exception{
+		logBefore(logger, "LoginController_toregister");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd =this.getPageData();
+		pd.put("SYSNAME", Tools.readTxtFile(Const.SYSNAME)); //读取系统名称
+		mv.addObject("pd",pd);
+		mv.setViewName("shop_pc/user/xgsj");
+		return mv;
+	}
+	
 	
 	
 	/**
 	 * 请求登录，验证用户
 	 */
-	@RequestMapping(value="/shop_login" ,produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/login" ,produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public Object login()throws Exception{
-		logBefore(logger, "LoginController_login_login");
+public Object login( HttpServletResponse response,HttpServletRequest request) throws Exception {
+		
+		response.setHeader("P3P","CP=CAO PSA OUR");
+		JSONObject jo = new JSONObject();
 		Map<String,String> map = new HashMap<String,String>();
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		String errInfo ="";
+		String sessionid="";
 		String KEYDATA[] = pd.getString("KEYDATA").replaceAll("qqbigbug", "").replaceAll("qqbigbug", "").split(",zx,");
-		if(null !=KEYDATA && KEYDATA.length==3){
+		if(null !=KEYDATA && KEYDATA.length==2){
 			Subject currentUser = SecurityUtils.getSubject();
 			Session session = currentUser.getSession();
-			String sessionCode =(String)session.getAttribute(Const.SESSION_SECURITY_CODE);
-			String code =KEYDATA[2];
-			if(null ==code || "".equals(code)){
-				errInfo ="nullcode";
-			}else{
-				String USERNAME =KEYDATA[0];
-				String PASSWORD =KEYDATA[1];
-				pd.put("USERNAME", USERNAME);
-				if(Tools.notEmpty(sessionCode)&&sessionCode.equalsIgnoreCase(code)){
-					String passwd = new  SimpleHash("SHA-1",USERNAME,PASSWORD).toString();
-					Shop_User shop_user =shopuserService.getShopUserByNameAndPWd(passwd);
-					if(shop_user !=null){
-							//更新最后登录时间
-							//String last_login =DateUtil.getTime().toString();
-							shop_user.setLast_login(DateUtil.getTime().toString());
-							shop_user.setIp(this.getRemortIP());
-							shopuserService.updateLastLogin(shop_user);
-							session.setAttribute(Const.SESSION_SHOPUSER, shop_user);
-							session.removeAttribute(Const.SESSION_SECURITY_CODE);
+			String USERNAME =KEYDATA[0];
+			String PASSWORD =KEYDATA[1];
+			pd.put("USERNAME", USERNAME);
+			
+			String passwd = new  SimpleHash("SHA-1",USERNAME,PASSWORD).toString();
+			Wx_BindCustomer wx_BindCustomer =shopuserService.getWx_BindCustomerPWd(passwd);
+			if(wx_BindCustomer !=null){
+							shopuserService.updateLastLogin(wx_BindCustomer);
+							sessionid =wx_BindCustomer.getId();
+							session.setAttribute(Const.SESSION_CLIENTUSER, wx_BindCustomer);
 							Subject subject =SecurityUtils.getSubject();
 							UsernamePasswordToken token = new UsernamePasswordToken(USERNAME,PASSWORD);
 							try{
 								subject.login(token);
-							}catch(AuthenticationException ex){
+							}catch(Exception ex){
 								errInfo = "身份验证失败！";
 							}
-						}else{
+			}else{
 							errInfo ="usererror";
-						}
-				}else{
-					errInfo ="codeerror";
-				}
+				 }
 				
-			}
-				
-			if(Tools.isEmpty(errInfo)){
+		if(Tools.isEmpty(errInfo)){
 					errInfo = "success";					//验证成功
-				}
-				
-			
+			}
+		
 		}else{
 			errInfo ="error";
 		}
 		map.put("result", errInfo);
 		return AppUtil.returnObject(new PageData(), map);
-		
 	}
 	
 	
-	/**
-	 * 用户注销
-	 * @param session
-	 * @return
-	 */
-	@RequestMapping(value="/logout")
-	public ModelAndView logout(){
-		ModelAndView mv = this.getModelAndView();
-		PageData pd = new PageData();
-		//shiro管理的session
-		Subject currentUser = SecurityUtils.getSubject();  
-		Session session = currentUser.getSession();
-		session.removeAttribute(Const.SESSION_SHOPUSER);
-		/*session.removeAttribute(Const.SESSION_ROLE_RIGHTS);
-		session.removeAttribute(Const.SESSION_allmenuList);
-		session.removeAttribute(Const.SESSION_menuList);
-		session.removeAttribute(Const.SESSION_QX);
-		session.removeAttribute(Const.SESSION_userpds);
-		session.removeAttribute(Const.SESSION_USERNAME);
-		session.removeAttribute("changeMenu");*/
-		session.removeAttribute(Const.SESSION_SHOPUSERROL);
-		
-		//shiro销毁登录
-		Subject subject = SecurityUtils.getSubject(); 
-		subject.logout();
-		
-		pd = this.getPageData();
-		String  msg = pd.getString("msg");
-		pd.put("msg", msg);
-		
-		pd.put("SYSNAME", Tools.readTxtFile(Const.SYSNAME)); //读取系统名称
-		mv.setViewName("shop/login/login-page");
-		mv.addObject("pd",pd);
-		return mv;
-	}
 	
-	
+
 	
 	
 	

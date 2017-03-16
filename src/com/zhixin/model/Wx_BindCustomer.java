@@ -21,18 +21,41 @@ public class Wx_BindCustomer implements Serializable {
 	private Timestamp binddate;
 	
 	private Integer status;
-	////
-	private String wxUserName;
-	
-	private String  suserNumber;
 	
 	private String phone;
 	
+	private String password;
+	
 	private String email;
+	
+	private String pc_password;
+	public String getPc_password() {
+		return pc_password;
+	}
+
+	public void setPc_password(String pc_password) {
+		this.pc_password = pc_password;
+	}
+
+	private Set<ShopLink_Customer_Driver>  shoplinkcustomerdrivers = new HashSet<>();
+	
+	private Set<Shop_Client> shopclients = new HashSet<>();
+	
+	private Set<Shop_Order> shoporders = new HashSet<>();
 	
 	////
 	private Set<Link_BindCustomers_Factorys>  bindcustomer_factorys = new HashSet<>();
 	
+	
+	
+
+	public Set<Shop_Order> getShoporders() {
+		return shoporders;
+	}
+
+	public void setShoporders(Set<Shop_Order> shoporders) {
+		this.shoporders = shoporders;
+	}
 
 	public String getId() {
 		return id;
@@ -76,22 +99,13 @@ public class Wx_BindCustomer implements Serializable {
 		this.status = status;
 	}
 
-	
-	
-	public String getWxUserName() {
-		return wxUserName;
+
+	public String getPassword() {
+		return password;
 	}
 
-	public void setWxUserName(String wxUserName) {
-		this.wxUserName = wxUserName;
-	}
-
-	public String getSuserNumber() {
-		return suserNumber;
-	}
-
-	public void setSuserNumber(String suserNumber) {
-		this.suserNumber = suserNumber;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public String getPhone() {
@@ -101,6 +115,8 @@ public class Wx_BindCustomer implements Serializable {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
+
+	
 
 	public String getEmail() {
 		return email;
@@ -117,19 +133,37 @@ public class Wx_BindCustomer implements Serializable {
 	public void setBindcustomer_factorys(Set<Link_BindCustomers_Factorys> bindcustomer_factorys) {
 		this.bindcustomer_factorys = bindcustomer_factorys;
 	}
+	
+	
 
-	@Override
-	public String toString() {
-		return "Wx_BindCustomer [id=" + id + ", openid=" + openid + ", namepinyin=" + namepinyin + ", binddate="
-				+ binddate + ", status=" + status + ", wxUserName=" + wxUserName + ", suserNumber=" + suserNumber
-				+ ", phone=" + phone + ", email=" + email + ", bindcustomer_factorys=" + bindcustomer_factorys + "]";
+	public Set<ShopLink_Customer_Driver> getShoplinkcustomerdrivers() {
+		return shoplinkcustomerdrivers;
+	}
+
+	public void setShoplinkcustomerdrivers(Set<ShopLink_Customer_Driver> shoplinkcustomerdrivers) {
+		this.shoplinkcustomerdrivers = shoplinkcustomerdrivers;
 	}
 
 	
 	
 	
+	public Set<Shop_Client> getShopclients() {
+		return shopclients;
+	}
+
+	public void setShopclients(Set<Shop_Client> shopclients) {
+		this.shopclients = shopclients;
+	}
+
+	}
+
+	
+
 	
 	
 	
 	
-}
+	
+	
+	
+	

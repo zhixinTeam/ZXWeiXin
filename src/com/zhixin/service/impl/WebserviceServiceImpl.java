@@ -15,10 +15,7 @@ import com.zhixin.dao.CompanyDao;
 import com.zhixin.dao.FactoryDao;
 import com.zhixin.dao.WebserviceDao;
 import com.zhixin.dao.WxBindCustomerDao;
-import com.zhixin.dao.shop.ShopDriverDao;
-import com.zhixin.dao.shop.ShopGoodsDao;
 import com.zhixin.dao.shop.ShopOrderDao;
-import com.zhixin.dao.shop.ShopUserDao;
 import com.zhixin.entity.Json_Order;
 import com.zhixin.model.Doc_Company;
 import com.zhixin.model.Doc_Factory;
@@ -26,11 +23,14 @@ import com.zhixin.model.Shop_Client;
 import com.zhixin.model.Shop_Driver;
 import com.zhixin.model.Shop_Goods;
 import com.zhixin.model.Shop_Order;
-import com.zhixin.model.Shop_User;
 import com.zhixin.model.Wx_BindCustomer;
 import com.zhixin.model.X_Eventmsg;
 import com.zhixin.service.WebserviceService;
-import com.zhixin.service.shop.ShopOrderService;
+/*
+import com.zhixin.dao.shop.ShopDriverDao;
+import com.zhixin.dao.shop.ShopGoodsDao;
+import com.zhixin.dao.shop.ShopOrderDao;
+import com.zhixin.service.shop.ShopOrderService;*/
 import com.zhixin.tools.Base64Utils;
 import com.zhixin.tools.ParseXml;
 import com.zhixin.tools.TimestampUtil;
@@ -77,17 +77,17 @@ public class WebserviceServiceImpl implements WebserviceService {
 	@Resource(name="wxbindcustomerDao")
 	private WxBindCustomerDao wxbindcustomerDao;
 	
-	@Resource(name="shopuserDao")
-	private ShopUserDao shopuserDao;
-	
-	@Resource(name="shopgoodsDao")
-	private ShopGoodsDao shopgoodsDao;
-	
 	@Resource(name="shoporderDao")
 	private ShopOrderDao shoporderDao;
 	
+	/*
+	@Resource(name="shopgoodsDao")
+	private ShopGoodsDao shopgoodsDao;
+	
+	
+	
 	@Resource(name="shopdriverDao")
-	private ShopDriverDao shopdriverDao;
+	private ShopDriverDao shopdriverDao;*/
 	
 	
 	//获取客户注册信息
@@ -96,14 +96,11 @@ public class WebserviceServiceImpl implements WebserviceService {
 		// TODO Auto-generated method stub
 				Element theElement=null,  root=null;
 				String fac_id ="";
-				String phone  ="";
 				Document xmldoc=ParseXml.toDocment(param);
 				root=xmldoc.getDocumentElement();
 				try{
 					theElement=(Element) ParseXml.selectSingleNode("/DATA/head/Factory", root);
 				    fac_id=theElement.getTextContent();
-				    theElement=(Element) ParseXml.selectSingleNode("/DATA/head/Phone", root);
-				    phone=theElement.getTextContent();
 				}catch(Exception e){
 					return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DATA>\n<head>\n<errcode>3</errcode>\n<errmsg> "+e.getMessage()+"</errmsg>\n</head>\n</DATA>";
 				}
@@ -135,37 +132,28 @@ public class WebserviceServiceImpl implements WebserviceService {
 		            // head end 
 		            
 		            // items start 	
-		            Wx_BindCustomer customer = webservicedao.findUniqueCustomer( fac_id ,phone);
+		            List <Wx_BindCustomer> customer_list = webservicedao.findCustomerList( fac_id );
 				    Doc_Factory factory =	factorydao.getById(fac_id);
-				    if(customer==null){
+				    if(customer_list.size()==0){
 					}else{
 						Element items = document.createElement("items");
-			            Element item = document.createElement("item");
-						Element factoryid = document.createElement("Factory");
-				        factoryid.setTextContent(fac_id);
-				        item.appendChild(factoryid);
-				        Element phoneid = document.createElement("phone");
-				        phoneid.setTextContent(phone);
-				        item.appendChild(phoneid);
-				        Element Appid = document.createElement("Appid");
-				        Appid.setTextContent(factory.getDoc_company().getAppid());
-				        item.appendChild(Appid);
-				        Element Bindcustomerid = document.createElement("Bindcustomerid");
-				        Bindcustomerid.setTextContent(customer.getId());
-				        item.appendChild(Bindcustomerid);
-				        Element Namepinyin = document.createElement("Namepinyin");
-				        Namepinyin.setTextContent(customer.getNamepinyin());
-				        item.appendChild(Namepinyin);
-				        Element Email = document.createElement("Email");
-				        Email.setTextContent(customer.getEmail());
-				        item.appendChild(Email);
-				        Element Openid = document.createElement("Openid");
-				        Openid.setTextContent(customer.getOpenid() );
-				        item.appendChild(Openid);
-				        Element Binddate = document.createElement("Binddate");
-				        Binddate.setTextContent(customer.getBinddate().toString());
-				        item.appendChild(Binddate);
-				        items.appendChild(item);
+			            for(Wx_BindCustomer customer:customer_list){
+
+				            Element item = document.createElement("item");
+			            	Element phoneid = document.createElement("Phone");
+					        phoneid.setTextContent(customer.getPhone());
+					        item.appendChild(phoneid);
+					        Element Bindcustomerid = document.createElement("Bindcustomerid");
+					        Bindcustomerid.setTextContent(customer.getId());
+					        item.appendChild(Bindcustomerid);
+					        Element Namepinyin = document.createElement("Namepinyin");
+					        Namepinyin.setTextContent(customer.getNamepinyin());
+					        item.appendChild(Namepinyin);
+					        Element Email = document.createElement("Email");
+					        Email.setTextContent(customer.getEmail());
+					        item.appendChild(Email);
+					        items.appendChild(item);
+			            }
 			            newroot.appendChild(items);
 					}
 		           
@@ -440,7 +428,7 @@ public class WebserviceServiceImpl implements WebserviceService {
 	}
 
 	//添加删除商品
-	@SuppressWarnings("unchecked")
+	/*@SuppressWarnings("unchecked")
 	@Override
 	public String save_shopgoods(String params) {
 		// TODO Auto-generated method stub
@@ -545,115 +533,74 @@ public class WebserviceServiceImpl implements WebserviceService {
 
 	}
 
-
+*/
 	@Override
 	public String save_shopclients(String params) {
 		// TODO Auto-generated method stub
 		Element theElement=null,  root=null;
-		String phone ="";
-		String password  =""; 
 		String type  ="";
 		String factoryID ="";
-		String openID="";
+		String customerID="";
 		Document xmldoc=ParseXml.toDocment(params);
 		root=xmldoc.getDocumentElement();
+		//wxbindcustomerDao
 		try{
 			
-			theElement=(Element) ParseXml.selectSingleNode("/DATA/head/phone", root);
-			phone=theElement.getTextContent();
-		    theElement=(Element) ParseXml.selectSingleNode("/DATA/head/password", root);
-		    password=theElement.getTextContent();
 		    theElement=(Element) ParseXml.selectSingleNode("/DATA/head/type", root);
 		    type=theElement.getTextContent();
 		    theElement=(Element) ParseXml.selectSingleNode("/DATA/head/Factory", root);
 		    factoryID=theElement.getTextContent();
-		    theElement=(Element) ParseXml.selectSingleNode("/DATA/head/OpenID", root);
-		    openID=theElement.getTextContent();
+		    theElement=(Element) ParseXml.selectSingleNode("/DATA/head/Customer", root);
+		    customerID=theElement.getTextContent();
 			//新增客户
-			Shop_User shopuser =null;
 			Shop_Client shopclient =null;
 			Doc_Factory factory =null;
 			String clientID ="";
 			String clientnumber ="";
 			String clientname ="";
 			if("add".equals(type)){
-			  shopuser =	shopuserDao.findShopUserByPhoneandFactoryid(phone,factoryID);
 			  shopclient = new Shop_Client();
 			  NodeList nodelist =ParseXml.selectNodes("/DATA/Items/Item", root);
 			  String cash ="";
 			  List listjb = new ArrayList<Shop_Client>();
 			  factory =factorydao.getById(factoryID);
+			  shopclient.setDoc_factory(factory);
 			  if(factory ==null)
 				  return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DATA>\n<head>\n<errcode>8</errcode>\n<errmsg> factoryID is null</errmsg>\n</head>\n</DATA>";
 				
-			 if(shopuser ==null){
-				 	Wx_BindCustomer wx_BindCustomer =wxbindcustomerDao.findFactoryByOpenID(openID);
+			 
+				 	Wx_BindCustomer wx_BindCustomer =wxbindcustomerDao.findFactoryBycustomerID(customerID);
 				 	if(wx_BindCustomer ==null)
-				 		 return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DATA>\n<head>\n<errcode>9</errcode>\n<errmsg> openid is not fond</errmsg>\n</head>\n</DATA>";
-				 	shopuser = new Shop_User();
-				 	shopuser.setUsername(phone);
-				 	String passwd = new  SimpleHash("SHA-1",phone+factoryID,password).toString();
-				 	shopuser.setPassword(passwd);
-				 	shopuser.setDoc_factory(factory); //添加工厂关联
-				 	shopuser.setOpenID(openID);
-				 	shopuser.setCreatedate(TimestampUtil.getnowtime());
-			    	for (int i = 0; i < nodelist.getLength(); i++) {
+				 		 return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DATA>\n<head>\n<errcode>9</errcode>\n<errmsg> customerID is not fond</errmsg>\n</head>\n</DATA>";
+			    	//如果账号没有关联工厂 进行关联
+				 	wxbindcustomerDao.updateLinkFactoryBycustomer(factory,wx_BindCustomer);
+				 	for (int i = 0; i < nodelist.getLength(); i++) {
 			    		Node employee = nodelist.item(i);
 			    		NodeList datalist =employee.getChildNodes();
 			    		for(int j=0;j<datalist.getLength();j++){
 			    			Node data = datalist.item(j);
-			    			if ("clientID".equals(data.getNodeName())) {
-								clientID=data.getTextContent();
+			    			if ("clientname".equals(data.getNodeName())) {
+			    				clientname=data.getTextContent();
 							}  else if ("cash".equals(data.getNodeName())) {
 								cash=data.getTextContent();
 							}  else if ("clientnumber".equals(data.getNodeName())) {
 								clientnumber=data.getTextContent();
-							}  else if ("clientname".equals(data.getNodeName())) {
-								clientname=data.getTextContent();
-							} 
+							}
 			    		}
-			    		shopclient.setShopuser(shopuser);
+			    		shopclient.setBindcustmoer(wx_BindCustomer);
 			    		shopclient.setCash(cash);
 			    		shopclient.setClientnumber(clientnumber);
 			    		shopclient.setClientname(clientname);
-			    		
-						listjb.add(shopclient);
-			    	}
-				 
-				 
-				 shopuserDao.saveShopUserandClient(listjb,shopuser); 
-			 }else {
-				 for (int i = 0; i < nodelist.getLength(); i++) {
-			    		Node employee = nodelist.item(i);
-			    		NodeList datalist =employee.getChildNodes();
-			    		for(int j=0;j<datalist.getLength();j++){
-			    			Node data = datalist.item(j);
-			    			if ("clientID".equals(data.getNodeName())) {
-								clientID=data.getTextContent();
-							}else if ("cash".equals(data.getNodeName())) {
-								cash=data.getTextContent();
-							}else if ("clientnumber".equals(data.getNodeName())) {
-								clientnumber=data.getTextContent();
-							}else if ("clientname".equals(data.getNodeName())) {
-								clientname=data.getTextContent();
-							}     
-			    		}
-			    		shopclient.setShopuser(shopuser);
-			    		shopclient.setCash(cash);
-			    		shopclient.setClientnumber(clientnumber);
-			    		shopclient.setClientname(clientname);
-			    		Shop_Client shopcli=shopuserDao.findShop_Clinet(clientnumber,shopuser.getU_id());
-			    		if(shopcli ==null)
+			    		Shop_Client ylclient=	wxbindcustomerDao.findClientByFactory( clientnumber,factoryID);
+			    		if(ylclient ==null)
 			    			listjb.add(shopclient);
-				 	}
-				 System.out.print(listjb.size());
-				 if(listjb.size()>0){
-					 shopuserDao.saveShopClient(listjb);
-				 }
-				 else
-					 return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DATA>\n<head>\n<errcode>6</errcode>\n<errmsg> client is exit !</errmsg>\n</head>\n</DATA>";
-					
-			}
+			    	}
+			    	if(listjb.size()>0)
+			    		wxbindcustomerDao.saveShopClient(listjb); 
+			    	else
+			    		return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DATA>\n<head>\n<errcode>3</errcode>\n<errmsg> clientnumber is exit !</errmsg>\n</head>\n</DATA>";
+			    	
+			
 			//删除客户
 			}else if("del".equals(type)){
 				 	NodeList dellist =ParseXml.selectNodes("/DATA/Items/Item", root);
@@ -669,17 +616,15 @@ public class WebserviceServiceImpl implements WebserviceService {
 			    		}
 			    		listdel.add(clientnumber);
 			    	}
-					shopuserDao.deleteByClientID(listdel);
+					wxbindcustomerDao.deleteByClientID(listdel);
 				
 				
 			}else if("update".equals(type)){
-				  shopuser =	shopuserDao.findShopUserByPhoneandFactoryid(phone,factoryID);
+				 /* shopuser =	shopuserDao.findShopUserByPhoneandFactoryid(phone,factoryID);
 				  shopclient = new Shop_Client();
 				  NodeList nodelist =ParseXml.selectNodes("/DATA/Items/Item", root);
 				  String cash ="";
 				  List listjb = new ArrayList<Shop_Client>();
-				  //factory =factorydao.getById(factoryID);
-				  
 				  for (int i = 0; i < nodelist.getLength(); i++) {
 			    		Node employee = nodelist.item(i);
 			    		NodeList datalist =employee.getChildNodes();
@@ -703,7 +648,7 @@ public class WebserviceServiceImpl implements WebserviceService {
 			    		listjb.add(shopclient);
 				 	}
 				  
-				  shopuserDao.updateShopClients(listjb); 
+				  shopuserDao.updateShopClients(listjb); */
 				
 			}
 		}catch(Exception e){
@@ -714,7 +659,7 @@ public class WebserviceServiceImpl implements WebserviceService {
 
 	}
 
-
+	
 	@Override
 	public String updateget_shoporders(String params) {
 		// TODO Auto-generated method stub
@@ -757,8 +702,7 @@ public class WebserviceServiceImpl implements WebserviceService {
             // head end 
             
             // items start 	
-            List<Json_Order> shop_orders=shoporderDao.update_get_shoporders(fac_id,idnumber);/*
-            Shop_Driver driver =shopdriverDao.findDriverByCardID(idnumber);*/
+            List<Json_Order> shop_orders=shoporderDao.update_get_shoporders(fac_id,idnumber);
 		    if(shop_orders.isEmpty()){
 			}else{
 				Element items = document.createElement("items");
@@ -830,7 +774,7 @@ public class WebserviceServiceImpl implements WebserviceService {
         }
         return xmlStr;
 	}
-
+	
 
 	@Override
 	public String updatecomplete_shoporders(String params) {
@@ -857,7 +801,7 @@ public class WebserviceServiceImpl implements WebserviceService {
 		return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DATA>\n<head>\n<errcode>0</errcode>\n<errmsg>OK</errmsg>\n</head>\n</DATA>";
 
 	}
-
+	
 	//获取提货单详情
 	@Override
 	public String updateget_shoporderByNO(String params) {
@@ -901,8 +845,7 @@ public class WebserviceServiceImpl implements WebserviceService {
             // head end 
             
             // items start 	
-            List<Json_Order> shop_orders=shoporderDao.update_get_shoporderByNO(fac_id,ordernumber);/*
-            Shop_Driver driver =shopdriverDao.findDriverByCardID(idnumber);*/
+            List<Json_Order> shop_orders=shoporderDao.update_get_shoporderByNO(fac_id,ordernumber);
 		    if(shop_orders.isEmpty()){
 			}else{
 				Element items = document.createElement("items");
@@ -974,7 +917,7 @@ public class WebserviceServiceImpl implements WebserviceService {
         }
         return xmlStr;
 	}
-
+	
 
 	@Override
 	public void saveeventMsg(X_Eventmsg x_eventmsg) {

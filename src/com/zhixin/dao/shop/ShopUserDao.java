@@ -5,32 +5,28 @@ import java.util.Set;
 
 import com.zhixin.base.DaoSupport;
 import com.zhixin.entity.Json_Client;
+import com.zhixin.entity.Json_Doc_Company;
 import com.zhixin.entity.Json_Driver;
 import com.zhixin.entity.Json_Goods;
-import com.zhixin.model.Doc_Factory;
-import com.zhixin.model.ShopLink_User_Driver;
+import com.zhixin.model.ShopLink_Customer_Driver;
 import com.zhixin.model.Shop_Client;
 import com.zhixin.model.Shop_Driver;
-import com.zhixin.model.Shop_Goods;
-import com.zhixin.model.Shop_User;
+import com.zhixin.model.Shop_Order;
+import com.zhixin.model.Wx_BindCustomer;
 
-public interface ShopUserDao extends DaoSupport<Shop_User>{
+public interface ShopUserDao extends DaoSupport<Wx_BindCustomer>{
 
-	Shop_User findShopUserByNameAndPwd(String passwd);
+	Wx_BindCustomer getWx_BindCustomerByNameAndPWd(String passwd);
 
-	Shop_User findShopUserByPhoneandFactoryid(String phone,String factoryid);
+	void updateWx_BindCustomerPassword(Wx_BindCustomer wx_BindCustomer);
+	
+	void updateLastLogin(Wx_BindCustomer wx_BindCustomer);
+	
+	Wx_BindCustomer getWx_BindCustomerByid(String wx_BindCustomer_id);
 
-	void saveShopUserandClient(List<Shop_Client> listjb, Shop_User shopuser);
+	List<Shop_Driver> findShopDrivers(Set<ShopLink_Customer_Driver> shopLink_Customer_Driver);
 
-	void saveShopClient(List<Shop_Client>  listjb);
-
-	void deleteByClientID(List<String> listdel);
-
-	void updateShopClients(List<Shop_Client> listjb);
-
-	Shop_User findShopUserByID(String shopuserid);
-
-	List<Shop_Driver> findShopDriver(Set<ShopLink_User_Driver> linkuser_driverSet);
+	
 
 	List<Json_Goods> findShopGoodsByfacid(String factoryid);
 
@@ -40,17 +36,51 @@ public interface ShopUserDao extends DaoSupport<Shop_User>{
 
 	Json_Driver findShopDriverByID(String driverid);
 
+	void updateshopDriver(Shop_Driver driver);
+
 	void updateShopUserPwd(String username, String passwd,String factoryid);
 
-	Shop_User findShopUserByUsername(String username,String factoryid);
 	
+	/**
+	 * 通过司机d_id查询司机json数据
+	 * @param d_id
+	 * @return
+	 */
+	Json_Driver findJsonDriverByD_ID(String d_id);
+	
+	Shop_Driver findDriverByD_ID(String d_id);
+	/**
+	 * 修改司机
+	 * @param driver
+	 */
+	void updateShoperDriver(Shop_Driver driver);
+	
+	/**
+	 * 通过司机id查询司机的货单信息
+	 * @param d_id
+	 * @return
+	 */
+	List<Shop_Order> findShopOrderByDriverId(Shop_Driver driver);
+
 	/**
 	 * 通过shopuser查询ShopLink_User_Driver
 	 * @param user
 	 * @return
 	 */
-	Set<ShopLink_User_Driver> findShopLink_User_DriverByU_id(Shop_User user);
+	Set<ShopLink_Customer_Driver> findShopLink_Customer_DriverByU_id(Wx_BindCustomer customer);
+	
 
 	Shop_Client findShop_Clinet(String clientnumber, String u_id);
+	
+	Shop_Client findShopClientByID(String c_id);
 
+	/**
+	 * 通过用户id查询绑定到的工厂集团
+	 * @return
+	 */
+	Json_Doc_Company findDoc_Company(String c_id);
+	
+	
+	
+	Wx_BindCustomer getWx_BindCustomerPWd(String pc_passwd);
 }

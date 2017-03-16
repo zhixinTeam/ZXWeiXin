@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.zhixin.base.BaseController;
 import com.zhixin.entity.Json_AppActivity;
@@ -29,12 +30,11 @@ import com.zhixin.model.App_activity;
 import com.zhixin.model.App_pack;
 import com.zhixin.model.App_picture;
 import com.zhixin.model.PageBean;
-import com.zhixin.model.ShopLink_User_Driver;
 import com.zhixin.model.Shop_Client;
 import com.zhixin.model.Shop_Driver;
-import com.zhixin.model.Shop_User;
 import com.zhixin.right_utils.Const;
 import com.zhixin.right_utils.PageData;
+import com.zhixin.right_utils.Tools;
 import com.zhixin.service.AppactivityService;
 import com.zhixin.service.ApppackService;
 import com.zhixin.service.ApppictureService;
@@ -66,6 +66,40 @@ public class ClientIndexController extends BaseController{
 	
 	@Resource(name="shopuserService")
 	private ShopUserService shopuserService;
+	
+	/**
+	 * 访问index界面
+	 * @return
+	 */
+	@RequestMapping(value="/toindex")
+	public ModelAndView toIndex()throws Exception{
+		logBefore(logger, "ClientIndexController_toindex");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd =this.getPageData();
+		pd.put("SYSNAME", Tools.readTxtFile(Const.SYSNAME)); //读取系统名称
+		mv.addObject("pd",pd);
+		mv.setViewName("weixin/news/index");
+		return mv;
+	}
+	
+	
+	/**
+	 * 访问index1界面
+	 * @return
+	 */
+	@RequestMapping(value="/toindex1")
+	public ModelAndView toIndex1()throws Exception{
+		logBefore(logger, "ClientIndexController_toindex1");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd =this.getPageData();
+		pd.put("SYSNAME", Tools.readTxtFile(Const.SYSNAME)); //读取系统名称
+		mv.addObject("pd",pd);
+		mv.setViewName("weixin/news/index1");
+		return mv;
+	}
+	
 	/**
 
 	 * app主页 
@@ -93,6 +127,39 @@ public class ClientIndexController extends BaseController{
 		 out.close();
 		
 		
+	}
+	
+	/**
+	 * 访问index界面
+	 * @return
+	 */
+	@RequestMapping(value="/tonewsone")
+	public ModelAndView toNewsOne()throws Exception{
+		logBefore(logger, "ClientIndexController_toindex");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd =this.getPageData();
+		pd.put("SYSNAME", Tools.readTxtFile(Const.SYSNAME)); //读取系统名称
+		mv.addObject("pd",pd);
+		mv.setViewName("weixin/news/newsone");
+		return mv;
+	}
+	
+	
+	/**
+	 * 访问公司简介界面
+	 * @return
+	 */
+	@RequestMapping(value="/togsjj")
+	public ModelAndView toGsjj()throws Exception{
+		logBefore(logger, "ClientIndexController_toindex");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd =this.getPageData();
+		pd.put("SYSNAME", Tools.readTxtFile(Const.SYSNAME)); //读取系统名称
+		mv.addObject("pd",pd);
+		mv.setViewName("weixin/news/gsjj");
+		return mv;
 	}
 	
 	
@@ -240,58 +307,86 @@ public class ClientIndexController extends BaseController{
 	}
 	
 	
+	/**
+	 * 访问购买须知界面
+	 * @return
+	 */
+	@RequestMapping(value="/tohzgc")
+	public ModelAndView toXscp()throws Exception{
+		logBefore(logger, "ClientIndexController_toindex");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd =this.getPageData();
+		pd.put("SYSNAME", Tools.readTxtFile(Const.SYSNAME)); //读取系统名称
+		mv.addObject("pd",pd);
+		mv.setViewName("weixin/news/hzgc");
+		return mv;
+	}
+	
+	/**
+	 * 访问czzn界面
+	 * @return
+	 */
+	@RequestMapping(value="/toczzn")
+	public ModelAndView toCzzn()throws Exception{
+		logBefore(logger, "ClientIndexController_toindex");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd =this.getPageData();
+		pd.put("SYSNAME", Tools.readTxtFile(Const.SYSNAME)); //读取系统名称
+		mv.addObject("pd",pd);
+		mv.setViewName("weixin/news/czzn");
+		return mv;
+	}
 	
 	
 	/**
-
-	 * 个人中心页 
-
+	 * 访问叫号机界面
+	 * @return
 	 */
-	@ResponseBody
-	@RequestMapping("touser")
-	public void touser( HttpServletResponse response,HttpServletRequest request) throws Exception {
-		JSONObject jo = new JSONObject();
-		jo.put("msg","success" );
+	@RequestMapping(value="/toczzna")
+	public ModelAndView toCzzna()throws Exception{
+		logBefore(logger, "ClientIndexController_toindex");
+		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
-		pd = this.getPageData();
-		response.setHeader("P3P","CP=CAO PSA OUR");
-		try{
-			Subject currentUser = SecurityUtils.getSubject();
-			Session session = currentUser.getSession();
-			String wx_token = TokenProccessor.getInstance().makeToken();
-			session.setAttribute("wx_token", wx_token);
-			String sessionId= pd.getString("sessionId");
-			Shop_User shopuser = (Shop_User) session.getAttribute(sessionId);
-			if(shopuser==null&&sessionId!=null){
-				shopuser =shopuserService.getShopUserByid(sessionId);
-			}
-			if(shopuser !=null){
-				Shop_User shopuserr = (Shop_User) session.getAttribute(sessionId);
-				if(null == shopuserr){
-					session.setAttribute(sessionId, shopuser);
-				}else{
-					shopuser =shopuserr;
-				}
-			}else{
-				jo.put("msg","error" );
-			}
-			
-		}catch(Exception e){
-			e.printStackTrace();
-		}finally{
-			 PrintWriter out;
-			 response.setContentType("application/json;charset=utf-8");
-			 response.setCharacterEncoding("utf-8");
-			 out = response.getWriter();
-			 out.write(jo.toString());
-			 
-			 
-			 out.flush();
-			 out.close();
-		}
-		
-		
-		
-		
+		pd =this.getPageData();
+		pd.put("SYSNAME", Tools.readTxtFile(Const.SYSNAME)); //读取系统名称
+		mv.addObject("pd",pd);
+		mv.setViewName("weixin/news/czzna");
+		return mv;
 	}
+	
+	/**
+	 * 访问app下单操作指南界面
+	 * @return
+	 */
+	@RequestMapping(value="/toappzn")
+	public ModelAndView toAppzn()throws Exception{
+		logBefore(logger, "ClientIndexController_toindex");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd =this.getPageData();
+		pd.put("SYSNAME", Tools.readTxtFile(Const.SYSNAME)); //读取系统名称
+		mv.addObject("pd",pd);
+		mv.setViewName("weixin/news/appzn");
+		return mv;
+	}
+	
+		
+	/**
+	 * 访问app下单操作指南界面
+	 * @return
+	 */
+	@RequestMapping(value="/togmxz")
+	public ModelAndView toGmxz()throws Exception{
+		logBefore(logger, "ClientIndexController_toindex");
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd =this.getPageData();
+		pd.put("SYSNAME", Tools.readTxtFile(Const.SYSNAME)); //读取系统名称
+		mv.addObject("pd",pd);
+		mv.setViewName("weixin/news/gmxz");
+		return mv;
+	}
+	
 }

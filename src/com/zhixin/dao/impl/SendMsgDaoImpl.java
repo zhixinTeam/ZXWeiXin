@@ -12,6 +12,8 @@ import com.zhixin.base.DaoSupportImpl;
 import com.zhixin.dao.SendMsgDao;
 import com.zhixin.model.Doc_Company;
 import com.zhixin.model.Doc_Factory;
+import com.zhixin.model.Shop_Client;
+import com.zhixin.model.Wx_BindCustomer;
 import com.zhixin.model.X_Eventmsg;
 import com.zhixin.model.X_Msg_Type;
 @Service(value="sendmsgdao")
@@ -20,16 +22,19 @@ public class SendMsgDaoImpl  extends DaoSupportImpl<X_Eventmsg> implements SendM
 	@Override
 	public List<X_Eventmsg> findUnsendMsg() {
 		// TODO Auto-generated method stub
-		/*String sql ="select x.ID, c.Openid,f.OrgCode,x.Content,x.issend ,d.AppID ,d.OriginalID from wx_event_msg x ,doc_factory f  ,wx_bindcustomer c ,doc_company d where f.CompanyID=d.ID and  x.SendUser =f.OrgCode  and x.ReviceUser =c.SuserNumber and x.issend != '1'  GROUP BY Openid ,Content,OrgCode,AppID,OriginalID"; 
-		Query query4 = getSession().createSQLQuery(sql).addScalar("ID", StringType.INSTANCE).addScalar("Openid", StringType.INSTANCE)
-				.addScalar("OrgCode", StringType.INSTANCE).addScalar("Content", StringType.INSTANCE).addScalar("issend", IntegerType.INSTANCE)
-				.addScalar("AppID", StringType.INSTANCE).addScalar("OriginalID", StringType.INSTANCE);
-		Query query4 =getSession().createSQLQuery(sql).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP); 
-		List<Object> listquery =query4.list();*/
-		
+		System.out.println("enter findUnsendMsg++++++++");
 		Query query=getSession().createQuery("from X_Eventmsg x where x.issend = '0' and x.sendcount<'3' order by createTime asc");  //带条件的查询语句     
 		List<X_Eventmsg> list=query.list();
-		
+		System.out.println(list.size()+"要修改的数量+++++++++++++++++");
+		for(X_Eventmsg msg: list){
+			String c_id =	msg.getReviceuser();
+			Shop_Client client=(Shop_Client) getSession().createQuery("from Shop_Client x where x.clientnumber ='"+c_id+"' ").uniqueResult();  //带条件的查询语句     
+			
+			if(client!=null)
+				msg.setOpenid(client.getBindcustmoer().getOpenid());
+			else
+				msg.setOpenid(msg.getReviceuser());
+		}
 		return list;
 	}
 

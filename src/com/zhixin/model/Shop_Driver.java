@@ -23,7 +23,7 @@ public class Shop_Driver implements Serializable {
 	private String phone;
 	
 	
-	private Set<ShopLink_User_Driver>  shoplinkuserdrivers = new HashSet<>();
+	private Set<ShopLink_Customer_Driver>  shoplinkcustomerdrivers = new HashSet<>();
 
 	private Set<Shop_Order> shoporders = new HashSet<>();
 	
@@ -61,12 +61,13 @@ public class Shop_Driver implements Serializable {
 		this.idnumber = idnumber;
 	}
 
-	public Set<ShopLink_User_Driver> getShoplinkuserdrivers() {
-		return shoplinkuserdrivers;
+	
+	public Set<ShopLink_Customer_Driver> getShoplinkcustomerdrivers() {
+		return shoplinkcustomerdrivers;
 	}
 
-	public void setShoplinkuserdrivers(Set<ShopLink_User_Driver> shoplinkuserdrivers) {
-		this.shoplinkuserdrivers = shoplinkuserdrivers;
+	public void setShoplinkcustomerdrivers(Set<ShopLink_Customer_Driver> shoplinkcustomerdrivers) {
+		this.shoplinkcustomerdrivers = shoplinkcustomerdrivers;
 	}
 
 	public Set<Shop_Order> getShoporders() {
@@ -89,6 +90,14 @@ public class Shop_Driver implements Serializable {
 
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+
+	public Shop_Driver(String d_id, String tracknumber) {
+		this.d_id = d_id;
+		this.tracknumber = tracknumber;
+	}
+
+	public Shop_Driver() {
 	}
 	
 	

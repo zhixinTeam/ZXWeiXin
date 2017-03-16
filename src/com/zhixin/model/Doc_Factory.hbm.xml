@@ -57,31 +57,26 @@
         	<!--指定映射类型  -->
         	<one-to-many class="com.zhixin.model.Sys_User"/>
         </set>  
-        <!--  <set name="shopclients"  cascade="all"  table="Shop_Client"  lazy="false" inverse="true" >
-        	执行多的表中的外键列的名字
+         <set name="shopclients"  cascade="all"  table="Shop_Client"  lazy="false" inverse="true" >
+      
         	<key column="FactoryID"></key>
-        	指定映射类型 
+        
         	<one-to-many class="com.zhixin.model.Shop_Client"/>
-        </set>   -->
-        <set name="shopusers"  cascade="all"  table="shop_user"  lazy="false" inverse="true" >
-        	<!-- 执行多的表中的外键列的名字 -->
+        </set>   
+        
+         <set name="shoporders"  cascade="all"  table="Shop_Order"   inverse="true" >
+        <!--	执行多的表中的外键列的名字-->
         	<key column="FactoryID"></key>
-        	<!--指定映射类型  -->
-        	<one-to-many class="com.zhixin.model.Shop_User"/>
-        </set>  
-        <set name="shoporders"  cascade="all"  table="Shop_Order"   inverse="true" >
-        	<!-- 执行多的表中的外键列的名字 -->
-        	<key column="FactoryID"></key>
-        	<!--指定映射类型  -->
+        <!--	指定映射类型 -->
         	<one-to-many class="com.zhixin.model.Shop_Order"/>
         </set>  
         
         <set name="shopgoods"  cascade="all"  table="Shop_Goods"  lazy="false" inverse="true" >
-        	<!-- 执行多的表中的外键列的名字 -->
+        	<!--执行多的表中的外键列的名字-->
         	<key column="FactoryID"></key>
-        	<!--指定映射类型  -->
+        	<!--指定映射类型 -->
         	<one-to-many class="com.zhixin.model.Shop_Goods"/>
-        </set> 
+        </set>  
         
          
         
@@ -107,12 +102,12 @@
 			
          
         
-        <set name="bindcustomer_factorys"  cascade="save-update" table="link_bindCustomers_factorys" inverse="true" >
-        	<!-- 执行多的表中的外键列的名字 -->
+         <set name="bindcustomer_factorys"  cascade="save-update" table="link_bindCustomers_factorys" inverse="true" >
+        	
         	<key column="FactoryID"></key>
-        	<!--指定映射类型  -->
+        
         	<one-to-many class="com.zhixin.model.Link_BindCustomers_Factorys"/>
-        </set> 
+        </set>  
         
         <!-- 工厂对应app的关联 -->
         

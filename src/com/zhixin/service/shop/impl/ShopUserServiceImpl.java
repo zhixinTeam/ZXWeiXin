@@ -8,8 +8,6 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.zhixin.dao.shop.ShopDriverDao;
-import com.zhixin.dao.shop.ShopGoodsDao;
-
 import com.zhixin.dao.shop.ShopOrderDao;
 import com.zhixin.dao.shop.ShopUserDao;
 import com.zhixin.entity.Json_Client;
@@ -17,12 +15,12 @@ import com.zhixin.entity.Json_Driver;
 import com.zhixin.entity.Json_Goods;
 import com.zhixin.model.Doc_Factory;
 import com.zhixin.model.PageBean;
-import com.zhixin.model.ShopLink_User_Driver;
+import com.zhixin.model.ShopLink_Customer_Driver;
 import com.zhixin.model.Shop_Client;
 import com.zhixin.model.Shop_Driver;
 import com.zhixin.model.Shop_Goods;
 import com.zhixin.model.Shop_Order;
-import com.zhixin.model.Shop_User;
+import com.zhixin.model.Wx_BindCustomer;
 import com.zhixin.service.shop.ShopUserService;
 
 
@@ -38,8 +36,8 @@ public class ShopUserServiceImpl implements ShopUserService{
 	private ShopDriverDao shopdriverDao;
 	
 	
-	@Resource(name="shopgoodsDao")
-	private ShopGoodsDao shopgoodsDao;
+	/*@Resource(name="shopgoodsDao")
+	private ShopGoodsDao shopgoodsDao;*/
 	
 	
 	@Resource(name="shoporderDao")
@@ -49,66 +47,70 @@ public class ShopUserServiceImpl implements ShopUserService{
 	
 	
 	@Override
-	public Shop_User getShopUserByNameAndPWd(String passwd) {
+	public Wx_BindCustomer getWx_BindCustomerByNameAndPWd(String passwd) {
 		// TODO Auto-generated method stub
-		return shopuserDao.findShopUserByNameAndPwd(passwd);
+		return shopuserDao.getWx_BindCustomerByNameAndPWd(passwd);
 	}
+
+
+
 
 	@Override
-	public void updateLastLogin(Shop_User shop_user) {
+	public void updateWx_BindCustomerPassword(Wx_BindCustomer wx_BindCustomer) {
 		// TODO Auto-generated method stub
-		shopuserDao.update(shop_user);
+		shopuserDao.updateWx_BindCustomerPassword(wx_BindCustomer);
 	}
+
+
+
 
 	@Override
-	public Shop_User getShopUserByid(String shopuserid) {
+	public Wx_BindCustomer getWx_BindCustomerByid(String wx_BindCustomer_id) {
 		// TODO Auto-generated method stub
-		return shopuserDao.findShopUserByID(shopuserid);
+		return shopuserDao.getWx_BindCustomerByid(wx_BindCustomer_id);
 	}
+
+
+
 
 	@Override
-	public List<Shop_Driver> findShopDrivers(Set<ShopLink_User_Driver> linkuser_driverSet) {
+	public List<Shop_Driver> findShopDrivers(Set<ShopLink_Customer_Driver> shopLink_Customer_Driver) {
 		// TODO Auto-generated method stub
-		return shopuserDao.findShopDriver(linkuser_driverSet);
+		return shopuserDao.findShopDrivers(shopLink_Customer_Driver);
 	}
 
-	
 
-	@Override
-	public List<Json_Goods> findShopGoodsByfacid(String factoryid) {
-		// TODO Auto-generated method stub
-		return shopuserDao.findShopGoodsByfacid(factoryid);
-	}
 
-	@Override
-	public List<Json_Client> findShopClients(String shopuserid, String factoryid) {
-		// TODO Auto-generated method stub
-		return shopuserDao.findShopClients(shopuserid,factoryid);
-	}
 
-	@Override
-	public List<Shop_Client> findShopClients(String u_id) {
-		// TODO Auto-generated method stub
-		return shopuserDao.findShopClients(u_id);
-	}
+
+
+
+
+
+
+
+
+
+
+
 
 	@Override
 	public Json_Driver findShopDriverByID(String driverid) {
 		// TODO Auto-generated method stub
-		return shopuserDao.findShopDriverByID(driverid);
+		return shopuserDao.findJsonDriverByD_ID(driverid);
 	}
+
+
+
 
 	@Override
 	public Shop_Driver saveDriver(Shop_Driver driver, String shopuserid) {
 		// TODO Auto-generated method stub
-		return shopdriverDao.saveDriver(driver,shopuserid);
+		return shopdriverDao.saveDriver(driver, shopuserid);
 	}
 
-	/*@Override
-	public Shop_Goods findShopGoodsByID(String goodsid) {
-		// TODO Auto-generated method stub
-		return shopgoodsDao.findShopGoodsByID( goodsid);
-	}*/
+
+
 
 	@Override
 	public Shop_Driver findDriverByID(String driverid) {
@@ -116,20 +118,12 @@ public class ShopUserServiceImpl implements ShopUserService{
 		return shopdriverDao.getById(driverid);
 	}
 
-	
 
-	@Override
-	public PageBean listOrders(String currentPage, String u_id) {
-		// TODO Auto-generated method stub
-		return shoporderDao.listOrders(currentPage,u_id);
-	}
 
-	/*@Override
-	public void saveShopOrder(Shop_Order shop_order, String factoryid) {
-		// TODO Auto-generated method stub
-		shoporderDao.save(shop_order);
-		shoporderDao.saveShopOrder(shop_order.getO_id(),factoryid);
-	}*/
+
+
+
+
 
 	@Override
 	public String saveShopOrder(Shop_Order shop_order) {
@@ -138,75 +132,107 @@ public class ShopUserServiceImpl implements ShopUserService{
 		return shop_order.getO_id();
 	}
 
+
+
+
 	@Override
-	public void updateOrderfac(String orderid, String factoryid,String c_id,String g_id) {
+	public void updateOrderfac(String orderid, String factoryid, String c_id, String g_id) {
 		// TODO Auto-generated method stub
 		shoporderDao.saveShopOrder(orderid,factoryid, c_id,g_id);
 	}
 
-	@Override
-	public void updateorderstatus(String orderid) {
-		// TODO Auto-generated method stub
-		shoporderDao.updateorderstatus(orderid);
-	}
+
+
+
+
+
 
 	@Override
 	public void updateshopDriver(Shop_Driver driver) {
 		// TODO Auto-generated method stub
-		shopdriverDao.update(driver);
+		shopdriverDao.updateShoperDriver(driver);
 	}
 
-	@Override
-	public void updateShopUserPwd(String username, String passwd,String factoryid) {
-		// TODO Auto-generated method stub
-		shopuserDao.updateShopUserPwd( username,  passwd,factoryid);
-	}
+
+
+
+
+
+
 
 	@Override
-	public Shop_User findShopUserByUsername(String username,String factoryid) {
-		// TODO Auto-generated method stub
-		return shopuserDao.findShopUserByUsername( username,factoryid);
-	}
-
-	@Override
-	public void deleteShoperDriver(String did,Shop_Driver driver) {
+	public void deleteShoperDriver(String did, Shop_Driver driver) {
 		// TODO Auto-generated method stub
 		shopdriverDao.deleteShoperDriver(did,driver);
+		
 	}
+
+
+
 
 	@Override
 	public Json_Driver findJsonDriverByD_ID(String d_id) {
 		// TODO Auto-generated method stub
-		return shopdriverDao.findJsonDriverByD_ID(d_id);
+		return shopuserDao.findJsonDriverByD_ID(d_id);
 	}
 
-	@Override
-	public void updateShoperDriver(Shop_Driver driver) {
-		// TODO Auto-generated method stub
-		shopdriverDao.updateShoperDriver(driver);
-	}
+
+
 
 	@Override
 	public Shop_Driver findDriverByD_ID(String d_id) {
 		// TODO Auto-generated method stub
-		return shopdriverDao.findDriverByD_ID(d_id);
+		return shopuserDao.findDriverByD_ID(d_id);
 	}
 
-	@Override
-	public List<Shop_Order> findShopOrderByDriverId(Shop_Driver shopdriver) {
-		// TODO Auto-generated method stub
-		return shoporderDao.findShopOrderByDriverId(shopdriver);
-	}
+
+
+
+
+
+
 
 	@Override
-	public Set<ShopLink_User_Driver> findShopLink_User_DriverByU_id(Shop_User user) {
+	public List<Shop_Order> findShopOrderByDriverId(Shop_Driver driver) {
 		// TODO Auto-generated method stub
-		return shopuserDao.findShopLink_User_DriverByU_id(user);
+		return shopuserDao.findShopOrderByDriverId(driver);
 	}
+
+
+
+
+	@Override
+	public Set<ShopLink_Customer_Driver> findShopLink_Customer_DriverByU_id(Wx_BindCustomer customer) {
+		// TODO Auto-generated method stub
+		return shopuserDao.findShopLink_Customer_DriverByU_id(customer);
+	}
+
+
+
+
+	@Override
+	public void updateLastLogin(Wx_BindCustomer wx_BindCustomer) {
+		// TODO Auto-generated method stub
+		shopuserDao.updateLastLogin(wx_BindCustomer);
+	}
+
 
 	
 
-	
+	@Override
+	public Shop_Client findShopClientByID(String c_id) {
+		// TODO Auto-generated method stub
+		 return shopuserDao.findShopClientByID(c_id);
+	}
+
+
+
+
+	@Override
+	public Wx_BindCustomer getWx_BindCustomerPWd(String pc_passwd) {
+		// TODO Auto-generated method stub
+		return shopuserDao.getWx_BindCustomerPWd(pc_passwd);
+	}
 
 	
 

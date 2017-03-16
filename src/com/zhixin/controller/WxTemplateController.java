@@ -61,11 +61,6 @@ public class WxTemplateController extends BaseController {
 
 		// 按照条件检索
 		try {
-
-			Subject currentUser = SecurityUtils.getSubject();
-			Session session = currentUser.getSession();
-			Sys_User user = (Sys_User) session.getAttribute(Const.SESSION_USER);
-			String factoryid = user.getDoc_factory().getId();
 			// 分页查询
 			if (pd.toString().contains("com_id"))
 				com_id = pd.getString("com_id");
