@@ -32,7 +32,7 @@
 				
 					<td>
 						<span class="input-icon">
-							<input autocomplete="off" id="nav-search-input" type="text" name="NAMEPY" value="${pd.NAMEPY }" placeholder="这里输入用户名" />
+							<input autocomplete="off" id="nav-search-input" type="text" name="NAMEPY" value="${pd.NAMEPY }" placeholder="这里输入账号" />
 							<i id="nav-search-icon" class="icon-search"></i>
 						</span>
 					</td>
@@ -51,9 +51,7 @@
 						<label><input type="checkbox" id="zcheckbox" /><span class="lbl"></span></label>
 						</th>
 						<th>序号</th>
-						<th>用户昵称</th>
-						<th>微信号</th>
-						<th>客户号</th>
+						<th>账号</th>
 						<th>邮箱</th>
 						<th>电话号码</th>
 						<th>关注日期</th>
@@ -76,8 +74,6 @@
 								</td>
 								<td class='center' style="width: 30px;">${vs.index+1}</td>
 								<td>${binduser.namepinyin }</td>
-								<td>${binduser.wxUserName }</td>
-								<td>${binduser.suserNumber }</td>
 								<td>${binduser.email }</td>
 								<td>${binduser.phone }</td>
 								<td>${binduser.binddate }</td>

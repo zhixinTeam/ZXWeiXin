@@ -12,39 +12,32 @@
 		<base href="<%=basePath%>">
 		<meta charset="utf-8" />
 		<title></title>
+		
 		<meta name="description" content="overview & stats" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		
-		<link rel="stylesheet" href="static/loading/jquery.loading.css" type="text/css">
-		<link rel="stylesheet" href="static/muselect/docs/css/bootstrap-3.3.2.min.css" type="text/css">
-        <link rel="stylesheet" href="static/muselect/docs/css/bootstrap-example.css" type="text/css">
-        <link rel="stylesheet" href="static/muselect/docs/css/prettify.css" type="text/css">
-
-        <script type="text/javascript" src="static/muselect/docs/js/jquery-2.1.3.min.js"></script><!-- 
-        <script type="text/javascript" src="static/muselect/docs/js/bootstrap-3.3.2.min.js"></script> -->
-        <script type="text/javascript" src="static/muselect/docs/js/prettify.js"></script>
-
-        <link rel="stylesheet" href="static/muselect/dist/css/bootstrap-multiselect.css" type="text/css">
-        <script type="text/javascript" src="static/muselect/dist/js/bootstrap-multiselect.js"></script>
-			<!--提示框-->
-		<script type="text/javascript" src="static/js/jquery.tips.js"></script>
-		<!--  
-   		 <script type="text/javascript" src="static/js/bootbox.js"></script>   -->
-   		 <script type="text/javascript" src="static/bootstrap3.0.3/bootstrap.min.js"></script> 
-   		 <script type="text/javascript" src="static/js/bootbox.js"></script>
         <script type="text/javascript">
             $(document).ready(function() {
                 window.prettyPrint() && prettyPrint();
             });
         </script>
+        <link rel="stylesheet" href="static/weixin/css/amazeui.min.css">
+	  <link rel="stylesheet" type="text/css" href="static/weixin/css/app.css"/>
+	  <link rel="stylesheet" href="static/weixin/js/loading/jquery.loading.css" type="text/css">
+	   <script src="static/weixin/js/jquery.min.js"></script> 
+	   <script src="static/weixinjs/amazeui.min.js"></script>
+	     <!-- sweetalert start-->
+		 <script src="static/weixin/js/sweetalert/dist/sweetalert-dev.js"></script>
+		  <link rel="stylesheet" href="static/weixin/js/sweetalert/dist/sweetalert.css">
+		 <!-- sweetalert end -->
+   		 
 		<title>志信科技</title>
 <script type="text/javascript">
-	$(top.hangge());
-	$(document).ready(function(){
-		
-		var isCommitted = false;
-	});
 	
+	$(document).ready(function(){
+	 if($("#id").val()!="")
+		 $("#username").attr("disabled",true); 
+		 
+	});
 	
 	function reset1(){ 
 		//$("#factory_ID").val("");
@@ -54,76 +47,75 @@
 	}
 	
 	//表单是否已经提交标识，默认为false
+	
+	//判断用户名是否存在
+	function hasU(){
+		
+		var newusername = $("#username").val();
+		if(newusername !="" && $("#id").val() ==""){
+			var url = "wxuser/hasU?newusername="+newusername+"&tm="+new Date().getTime();
+			$.ajax({
+				   type: "get", cache: false,  
+				    url: url,  
+				    data: "",  
+				    dataType: "text",  
+				    success: function (data) {  
+				        if (data == "error" || data == "") {  
+				        	swal("账号已存在!");
+				        	$("#username").val("");
+							$("#username").focus();
+				        } 
+				    }  
+			});
+		}
+		
+		
+	}
 	 
 	function save(){
-		if($("#flag").val()=="1"){
-			bootbox.alert("绑定完成无法修改，请先到工厂完成注册解绑" ,function(){
-				
-			});
-			return false;
-		}
-			
 		
-		
+		 
 		if($("#factory_ID").val()==null){
-			
-			bootbox.alert("请选择工厂" ,function(){
-			});
-			
+			swal("请选择工厂!");
 			$("#factory_ID").focus();
 			return false;
 		}
 		$("#factory_IDs").val(($("#factory_ID").val()).join(","));
 		
+		
 		if($("#username").val()==""){
-			
-			$("#username").tips({
-				side:3,
-	            msg:'输入用户名',
-	            bg:'#AE81FF',
-	            time:3
-	        });
+			swal("账号不能为空!");
 			$("#username").focus();
 			return false;
 		}
-		
-		
-		
-		
-		
+	
+		if($("#username").val().length<3){
+			swal("账号太短!");
+			return false;
+		}
 		
 		var myreg = /^(((13[0-9]{1})|159)+\d{8})$/;
 		
 		if($("#phone").val()==""){
 					
-					$("#phone").tips({
-						side:3,
-			            msg:'输入手机号',
-			            bg:'#AE81FF',
-			            time:3
-			        });
+					
+					swal("手机号不能为空!");
 					$("#phone").focus();
 					return false;
 				}else if($("#phone").val().length != 11 && !myreg.test($("#phone").val())){
-					$("#phone").tips({
-						side:3,
-			            msg:'手机号格式不正确',
-			            bg:'#AE81FF',
-			            time:3
-			        });
+					
+					swal("手机号格式不正确!");
 					$("#phone").focus();
 					return false;
 				}
 				
+		var phone =$("#phone").val();
+		//swal("注册成功,初始化密码为'"+phone.substr(phone.length-6,1)+"'!");	
 		
-				
-		
-				
 		//打开
 		var id = "body-loading";
-		$(window).loading({action:"open",id:id,font:40});		
-						
-		var url = "<%=basePath%>/wxuser/register?tm="+new Date().getTime();
+		$(window).loading({action:"open",id:id,font:40});			
+		 var url = "<%=basePath%>/wxuser/register?tm="+new Date().getTime();
 		$.ajax({
 			type: "POST",
 			url: url,
@@ -131,11 +123,9 @@
  				wx_token:$("#wx_token").val(),
    				id:$("#id").val(),
    				factory_IDs:$("#factory_IDs").val(),
-   				//wxusername:$("#wxusername").val(),
    				originalID:$("#originalID").val(),
    				phone:$("#phone").val(),
    				openid:$("#openid").val(),
-   				//email:$("#email").val(),
    				username:$("#username").val(),
    				old_facids_str:$("#old_facids_str").val() 
    				},
@@ -146,17 +136,23 @@
      				//关闭
      				$(window).loading({action:"close",id:id});
      			},1000);
-				bootbox.alert("注册成功，请到相应工厂绑定!" ,function(){
-				});
+				var msg= $("#msg").val();
+				if(msg=="success"){
+					swal("注册成功,初始化密码为'"+phone.substring(phone.length-6,phone.length)+"'!");
+					 window.location.reload(); 
+				}else if(msg=="oldsuccess"){
+					swal("修改信息成功,初始化密码为'"+phone.substring(phone.length-6,phone.length)+"'!");
+				}
+				
 			},
 	    	error:function(){
 	    		var time = setTimeout(function(){
      				//关闭
      				$(window).loading({action:"close",id:id});
      			},1000);
-  				bootbox.alert("注册失败，请返回微信主页重新进入!");
+  				swal("注册失败，请返回微信主页重新进入!");
   			}
-		}); 
+		});  
 		
 		
 		
@@ -166,45 +162,37 @@
 	
 	
 </script>
-<link rel="stylesheet" type="text/css" href="static/bootstrap-3.3.5-dist/css/bootstrap.min.css"> 
 
 	</head>
-<body >
-<button type="button" class="btn btn-primary btn-block btn-lg">用户注册</button>
-  	<div class="boot_top">
-	<h5>已绑定的工厂：</h5>
-	<c:forEach items="${oldfactoryList}" var="factory">
-			<c:if test="${factory.is_bind=='1'}">
-				 <input type="hidden" id="flag" value="1">
-			<input type="checkbox" value='1'  checked="checked"  disabled="disabled" /><label>${factory.factoryname } </label><br>
-			</c:if>
-	</c:forEach>
-	</div>
-	<hr>
-	<form action="wxuser/phone_index" name="userBindForm" id="userBindForm" method="post" >
-		<input type="hidden" name="old_facids_str" id="old_facids_str" value="${pd.old_facids_str}" />
+	
+	<body>
+<!--1-->
+	    <header data-am-widget="header"
+          class="am-header am-header-default">
+          <a href="login.html">
+          	<span class="am-icon-angle-left am-color am-icon-lg am-fl"></span>
+         </a> 
+      <h1 class="am-header-title am-color">
+     注册页面
+      </h1>
+  </header>
+	<!--1-->
+	<div class="am-g am-register">
+		
+ <form action="wxuser/phone_index" class="am-form" id="doc-vld-msg" data-am-validator>
+ 
 		<input type="hidden" name="wx_token" id="wx_token" value="${pd.wx_token}" />
 		<input type="hidden" name="id" id="id" value="${pd.id }"/>
 		<input type="hidden" name="openid" id="openid" value="${pd.fromUserName }"/>
 		<input type="hidden" name="originalID" id="originalID" value="${pd.toUserName }"/>
 		<input type="hidden" name="factory_IDs" id="factory_IDs" />
-		<div id="zhongxin">
-		
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#factory_ID').multiselect({
-        	nonSelectedText: '请选择部门工厂',
-        	allSelectedText: '已全选',
-        	buttonWidth: '100%'
-        });
-    });
-</script>
-	
- <div  class="form-group"  >
-    <label for="name">关注工厂:</label><br>
-    		
-		<select id="factory_ID"  name="factory_ID" style="width:100%;"  multiple="multiple"  required > 
-				<c:forEach items="${factoryList}" var="factory"> 
+  <fieldset>
+    <!--<legend>注册页面</legend>-->
+    
+      <div class="am-form-group">
+      <label for="doc-select-2-1">关注工厂</label>
+      <select class="am-round"  id="factory_ID"  name="factory_ID"   minchecked="1" maxchecked="10" multiple required>
+        <c:forEach items="${factoryList}" var="factory"> 
 				 <option value="${factory.id }" 
 				<c:forEach items="${oldfactoryList}" var="oldfac">
 				<c:if test="${oldfac.id==factory.id}">
@@ -212,145 +200,77 @@
 				</c:if> 
 				</c:forEach>
 				 >${factory.factoryname }</option>
-				 
 				
 				</c:forEach>
-				
-			</select>
-				
-				
-			
-			
-		</div>
-		
-  </div>
-  <div class="form-group">
-    <label for="name">用户名：</label>
-    <input type="text" class="form-control" name="username" id="username" value="${pd.username }"    required >
-  </div>
-  <div class="form-group">
-    <label for="name">手机号：</label>
-    <input type="text" class="form-control" name="phone" id="phone"  value="${pd.phone }"   required >
-  </div>
-  <button type="button" class="btn btn-danger pull-left" style="width: 140px; margin-left: 15px;" onclick="save();">保存</button>
-  <button type="button" class="btn btn-primary  pull-right" style="width: 140px; margin-right: 15px;" onclick="reset1();">返回</button>
-	
-	</form>
-	
-	
-		<!-- 引入 -->
-		<script type="text/javascript">window.jQuery || document.write("<script src='static/js/jquery-1.9.1.min.js'>\x3C/script>");</script>
-		<script src="static/js/ace-elements.min.js"></script>
-		<script src="static/js/ace.min.js"></script>
-		<script type="text/javascript" src="static/js/chosen.jquery.min.js"></script><!-- 下拉框 -->
-		
-		<script type="text/javascript">
-		
-		
-		$(function() {
-			
-			//单选框
-			$(".chzn-select").chosen(); 
-			$(".chzn-select-deselect").chosen({allow_single_deselect:true}); 
-			
-			//日期框
-			$('.date-picker').datepicker();
-			
-		});
-		
-		</script>
-	
-		  <script>
+      </select>
+      
+     
+    </div>
+    
+    
+    <div class="am-form-group">
+      <label for="doc-vld-name-2">商城帐号</label><span style='color:sandybrown'>(英文字母、数字和下划线)</span>
+      <input type="hidden" id="msg" value="<%=request.getAttribute("message") %>">
+      <input type="text" class="am-round" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')"   name="username" id="username" value="${pd.username }" onblur="hasU()" 
+    	  minlength="3" placeholder="商城账号(至少 3 个字符)"
+      required/>
+    </div>
 
+    <div class="am-form-group" data-am-validator>
+      <label for="doc-vld-528">手机号</label>
+      <input type="text" name="phone" id="phone"  value="${pd.phone }" class="js-pattern-mobile am-round"
+             placeholder="输入手机号" required/>
+    </div>
+	<script type="text/javascript">
+		if ($.AMUI && $.AMUI.validator) {
+      $.AMUI.validator.patterns.mobile = /^\s*1\d{10}\s*$/;
+}
+	</script>
+   <div class="am-g">
+   	<div class="am-u-sm-6">
+   		 <button class="am-btn am-btn-secondary am-btn-block am-round" type="button" onclick="save();">提交</button>
+   	</div>
+   	<div class="am-u-sm-6">
+   		 <button class="am-btn am-btn-warning am-btn-block am-round" type="button" onclick="reset1();">返回</button>
+    	
+   	</div>
+   </div> 
+  </fieldset>
+</form>
+<script type="text/javascript">	
+  $('#doc-vld-msg').validator({
+    onValid: function(validity) {
+      $(validity.field).closest('.am-form-group').find('.am-alert').hide();
+    },
+    onInValid: function(validity) {
+      var $field = $(validity.field);
+      var $group = $field.closest('.am-form-group');
+      var $alert = $group.find('.am-alert');
+      var msg = $field.data('validationMessage') || this.getValidationMessage(validity);
 
-/**
- * Author:ZengWeilong Version 1.4
- * V1.4
- */
-(function() {
-	/**
-	 * options = {action:"open",id:loadingId}
-	 */
-	$.fn.loading = function(options) {
-		/*默认值不可随意更改*/
-		var dfault = {
-			id : null, /*loading Id*/
-			rgba : 0.6, /*背景透明度*/
-			action : "close", /*执行方式true打开 其他值关闭*/
-			before : null, /* 动作执行前函数*/
-			after : null, /*动作执行后函数*/
-			font:10,
-			position : "absolute" /*fixed 固定绝对位置 absolute相对位置*/
-		};
-		var json = $.extend({},dfault, options);
+      if (!$alert.length) {
+        $alert = $('<div class="am-alert am-alert-danger"></div>').hide().
+          appendTo($group);
+      }
+      $alert.html(msg).show();
+    }
+    
+});
 
-		if (json.id == null)
-			return;
-		
-		var winobj = $(this);
-		if (typeof (json.before) == "function")
-			json.before();
-		
-		/*core*/
-		var core = {
-			restyle : function(winobj) {
-				var height = $(winobj).innerHeight();
-				var width = $(winobj).innerWidth();
-				var top = $(winobj).offset() == undefined ? 0 : $(winobj).offset().top;
-				var left = $(winobj).offset() == undefined ? 0 : $(winobj).offset().left;
-				json.position = $(winobj).offset() == undefined ? "fixed":"absolute";
-				var style = "z-index:10000;position:" + json.position + ";left:" + left + "px;top:"
-						+ top + "px;width:" + width + "px;"
-						+ "text-align:center;background:rgba(168,168,168," + json.rgba
-						+ ");height:" + height + "px;line-height:" + height + "px;";
-				return style;
-			},
-			open:function(){
-				if (!$("#" + json.id).attr("style")) {
-					var style = core.restyle(winobj);
-					var divhtml = "<div id='" + json.id + "' style='display:none;" + style
-							+ "'><span class='spinner-loader' style='font-size:"+json.font+"px!important;'>Loading&#8230;</span></div>";
-					$("body").append(divhtml);
-				}
-				$("#" + json.id).fadeIn(200, function() {
-					if (typeof (json.after) == "function")
-						json.after();
-				});
-			},
-			close:function(){
-				$("#" + json.id).fadeOut(500, function() {
-					if (typeof (json.after) == "function")
-						json.after();
-				}).remove();
-			},
-			resize:function(){
-				var style = core.restyle(winobj);
-				$("#" + json.id).removeAttr("style").attr("style", style);
-			}
-		}
-		
-		/*open*/
-		if ("open" == json.action) {
-			core.open();
-		}
-		/*close*/
-		if ("close" == json.action) {
-			core.close();
-		}
-		/*window change Listen*/
-		$(window).resize(function() {
-			core.resize();
-		});
-	}
+  
+ 
 
-})();
-
-
-
-
-
-	
 </script>
+
+
 		
+	</div>
+	
+<script src="static/weixin/js/jquery-1.7.2.js"></script>	
+	
+<script src="static/weixin/js/amazeui.min.js"></script>
+<script src="static/weixin/js/jquery.min.js"></script> 
+  <script src="static/weixin/js/loading/jquery.loading.js" type="text/javascript"></script> 
 </body>
+	
 </html>

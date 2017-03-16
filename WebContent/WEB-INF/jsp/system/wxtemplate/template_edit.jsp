@@ -56,7 +56,7 @@
 	<div id="zhongxin">
     <fieldset>
       <div id="legend" class="" align="center">
-        <legend class="">新增模板消息</legend>
+        <legend class="">修改模板消息</legend>
       </div>
 		<div class="control-group">
 
@@ -111,7 +111,9 @@
     </fieldset>
   </div>
   </form>
-	<div id="zhongxin2" class="center" style="display:none"><br/><br/><br/><br/><br/><img src="static/images/jiazai.gif" /><br/><h4 class="lighter block green">提交中...</h4></div>
+	<div id="zhongxin2" class="center" style="text-align: center;display:none">
+	<br/><br/><br/><br/><br/><img src="static/images/jiazai.gif" /><br/>
+	<h4 class="lighter block green">提交中...</h4></div>
 
 		<!-- 引入 -->
 		

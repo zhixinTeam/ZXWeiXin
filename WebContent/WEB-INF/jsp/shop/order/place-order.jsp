@@ -15,8 +15,6 @@
     <meta name="keywords" content=" 河南志信商城  志信科技公司 ，科技公司" />
     <meta name="description" content=" 一卡通服务  水泥 " />
         <title>公司网站</title>
-        
-   
    <script src="static/shop/js/jquery.min.js" type="text/javascript"></script>
    <link rel="stylesheet" type="text/css" href="static/shop/css/gsyy.css"/>
     <link href="static/shop/css/bootstrap.min.css" rel="stylesheet">  

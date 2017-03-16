@@ -52,7 +52,7 @@
 <body>
 	<form class="form-horizontal" action="template/${msg}" name="comForm"
 		id="comForm" method="post" enctype="multipart/form-data">
-
+			
 		<input type="hidden" name="currentPage" id="currentPage"
 			value="${pd.currentPage }" />
 		<div id="zhongxin">
@@ -77,7 +77,7 @@
 					<div class="controls">
 						<select class="chzn-select" name="com_id" id="com_id"
 							data-placeholder="请选择集团" style="width: 200px;">
-							<option value=""></option>
+							<option value="">请选择集团</option>
 							<c:forEach items="${comlist}" var="com">
 								<option value="${com.id }"
 									<c:if test="${pd.com_id==com.id}">selected</c:if>>${com.companyname}</option>
@@ -121,10 +121,10 @@
 			</fieldset>
 		</div>
 	</form>
-	<div id="zhongxin2" class="center" style="display: none">
-		<br /> <br /> <br /> <br /> <br /> <img
-			src="static/images/jiazai.gif" /><br />
-		<h4 class="lighter block green">提交中...</h4>
+	<div id="zhongxin2" class="center" style="text-align: center;display: none" >
+		<br /> <br /> <br /> <br /> <br /> 
+		<img  src="static/images/jiazai.gif" /><br />
+		<h4   class="lighter block green">提交中...</h4>
 	</div>
 
 	<!-- 引入 -->

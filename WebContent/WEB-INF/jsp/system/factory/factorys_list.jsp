@@ -193,16 +193,16 @@
 		<!-- 确认窗口 -->
 		<!-- 引入 -->
 		
-		<!-- <script type="text/javascript" src="static/js/myjs/system/factory/factorys_list.js"></script> -->
+	 <script type="text/javascript" src="static/js/myjs/system/factory/factorys_list.js"></script> 
 		<!-- delete start -->
 		 
 		 
-		 <!--<script src="static/js/ace-elements.min.js"></script> 
+		 <script src="static/js/ace-elements.min.js"></script> 
 		 	<script src="static/js/ace.min.js"></script>
 		 	<script type="text/javascript">window.jQuery || document.write("<script src='static/js/jquery-1.9.1.min.js'>\x3C/script>");</script>	
 		 		<script type="text/javascript" src="static/js/jquery.tips.js">	
 		 		<script type="text/javascript" src="static/js/bootbox.min.js"></script>
-		 		 -->
+		 		 
 		 
 		 
 		<!-- delete end -->
@@ -301,7 +301,7 @@
 			 var diag = new top.Dialog();
 			 diag.Drag=true;
 			 diag.Title ="修改工厂";
-			 diag.URL = "http://localhost:8080/wxplatform/company/goEditFac?factoryId="+factoryId+"&currentPage="+$("#nowpage").val();
+			 diag.URL = "<%=basePath%>company/goEditFac?factoryId="+factoryId+"&currentPage="+$("#nowpage").val();
 			 diag.Width = 245;
 			 diag.Height = 435;
 			 diag.CancelEvent = function(){ //关闭事件
