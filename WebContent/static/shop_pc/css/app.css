@@ -1,0 +1,246 @@
+﻿ *{
+ 	padding: 0;
+ 	margin: 0;
+ }
+ 
+ header a{
+ 	font-size: 16px;
+ }
+ 
+ 
+ .am-img-center{
+ 	width: 300px;
+ 	height: 300px;
+ 	display: block;
+ 	margin: 0 auto;
+ }
+ .get {
+      background: #1E5B94;
+      color: #fff;
+      text-align: center;
+      padding: 100px 0;
+    }
+.am-active a{
+	cursor: pointer !important;
+}
+.clearfix:after{
+	content: ".";
+	height: 0;
+	display: block;
+	clear: both;
+	visibility: hidden;
+}
+    .get-title {
+      font-size: 180%;
+      border: 2px solid #fff;
+      padding: 20px;
+      display: inline-block;
+    }
+
+    .get-btn {
+      background: #fff;
+    }
+
+    .detail {
+      background: #fff;
+    }
+    
+    #example  tr th,#example tr th{
+ 	font-size: 15px !important;
+ }
+ #example  tr  td,#example tr  td{
+ 	font-size: 14px !important;
+ 	
+ }
+ .am-wstop,#doc-vld-msg{
+ 	margin-top: -20px;
+ }
+
+    .detail-h2 {
+      text-align: center;
+      font-size: 150%;
+      margin: 40px 0;
+    }
+
+    .detail-h3 {
+      color: #1f8dd6;
+    }
+
+    .detail-p {
+      color: #7f8c8d;
+    }
+
+    .detail-mb {
+      margin-bottom: 30px;
+    }
+
+    .hope {
+      background: #0bb59b;
+      padding: 50px 0;
+    }
+
+    .hope-img {
+      text-align: center;
+    }
+
+    .hope-hr {
+      border-color: #149C88;
+    }
+
+    .hope-title {
+      font-size: 140%;
+    }
+
+    .about {
+      background: #fff;
+      padding: 40px 0;
+      color: #7f8c8d;
+    }
+
+    .about-color {
+      color: #34495e;
+    }
+
+    .about-title {
+      font-size: 180%;
+      padding: 30px 0 50px 0;
+      text-align: center;
+    }
+
+#message{
+	height: 100px;
+}
+.am-btn-bom{
+	
+	margin: 30px 10px;
+	width: 120px;
+	
+}
+.login-box{
+	margin-top: 100px;
+}
+.logo-img img{
+	margin: 20px auto;
+	
+}
+ .login-box .am-form .am-form-group{
+	overflow: auto;
+    border-bottom: 2px #68c6de solid;
+    margin-bottom: 30px;
+}
+
+ .am-form-group input{
+ 	background-color: transparent !important;
+	   
+	   display: block;
+       text-indent:30px;
+      
+}
+.am-form-login input{
+	border: none !important;
+}
+.am-form-login{
+	display: block;
+	width: 400px;
+	margin: -20px auto;
+}
+.am-icon-wz{
+	margin: 0 5px;
+	position: relative;
+	top: 35px;
+	color: #68C6DE;
+}
+.am-size{
+	display: block;
+	width: 400px;
+	box-sizing: border-box;
+	box-shadow: 1px 1px 1px #000000;
+	margin: 10px auto;
+}
+.am-legend{
+	display: block;
+	width: 400px;
+	margin: 0 auto;
+	border: none !important;
+}
+.am-no-border{
+	border: none !important;
+}
+.register-info{
+	font-size: 14px;
+	color: #9b9b9b;
+	margin-top: 15px;
+	
+	
+}
+.am-red{
+	color: red;
+}
+.am-yw{
+	color: red !important;
+	font-size: 26px !important;
+}
+.am-table-title{
+	font-size: 20px;
+	margin: 10px auto;
+	
+}
+.am-lsdd{
+	color: #3BB4F2;
+	margin: 10px 0 0 0;
+	font-family: "新宋体";
+}
+.am-btn-size{
+	width: 150px;
+}
+.am-btn-kx{
+	margin: 1rem 0;
+}
+.am-form-register{
+	display: block;
+	margin: 5px auto;
+	max-width: 400px;
+}
+
+.am-zz{
+	margin: 0 10px;
+}
+.am-list li {
+	
+	border-radius: 5px;
+	
+}
+.am-list li a{
+	color: #444444;
+}
+.am-bg-color{
+	background-color: #ededed !important;
+	
+}
+.am-modal-hd a{
+	display: block;
+	color:#000000 !important;
+	font-size: 20px !important;
+}
+.am-login-pt{
+ 	font-size: 24px; 
+ 	color:#0D8FD3;
+ 	margin-top:-15px;
+ 	letter-spacing:10px;
+ 	text-shadow: 1px 2px 3px #999;
+ 	
+ }
+ 
+ .am-legend{
+ 	font-size: 24px;
+ 	font-family: "微软雅黑";
+ }
+
+    /*.footer p {
+      color: #7f8c8d;
+      margin: 0;
+      padding: 15px 0;
+      text-align: center;
+      background: #2d3e50;
+    }
+    */
