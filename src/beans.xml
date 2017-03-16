@@ -133,6 +133,7 @@
 			
 			<property name="filterChainDefinitions">
 				<value>
+				/MP_verify_C0sRHMtOzwlLGp4i** =anon
 				/staticphone/**/** 		= anon
 	           	/staticphone/fonts/** 	= anon
 	           	/staticphone/images/** 	= anon
@@ -173,27 +174,14 @@
 	         	/tool/go_car  = anon
 	         	/tool/query_code  = anon
 	         	/tool/query_car  = anon
-	         	/clientIndex/index  = anon
-	         	/clientIndex/news_back  = anon
-	         	/clientUser/login  = anon 
-	         	/clientUser/page_order  = anon  
-	         	/clientUser/client_list  = anon 
-	         	/clientUser/driver_list  = anon
-	         	/clientUser/saveDriver  = anon
-	         	clientUser/updateDriver   = anon
-	         	clientUser/updateDriver1   = anon
 	         	
-	         	clientUser/delDriver        = anon
-	         	/clientOrder/order_list  = anon 
-	         	/clientIndex/news_list  = anon
-	         	/clientIndex/news_ByID  = anon
-	         	/clientIndex/picture_list  = anon
-	         	/clientIndex/carousel  = anon
-	         	/clientIndex/touser  = anon
+	         	/clientUser/*  = anon
 	         	/clientIndex/*  = anon
-	         	/clientOrder/*  = anon 
-	         	/clientUser/*  = anon  
+	         	/clientOrder/*  = anon
 	           	/**					= authc 
+	           	/tologin/**		= anon 
+	           	
+	         	
 				</value>
 			</property>
 		</bean>
@@ -215,6 +203,7 @@
 			
 			<property name="filterChainDefinitions">
 				<value>
+				/MP_verify_C0sRHMtOzwlLGp4i** =anon
 				/staticphone/**/** 		= anon
 	           	/staticphone/fonts/** 	= anon
 	           	/staticphone/images/** 	= anon
@@ -228,6 +217,7 @@
 				/static/js/** 		= anon
 				/static/shop/assets/**/**		= anon
 	           	/login_login	 	=     anon
+	           	/code.do 			= anon
 	           	 	 <!-- 系统 -->
 	           	/sys	 	=          anon
 	           		 <!-- 系统 -->
@@ -242,39 +232,27 @@
 	           	/appbook/book = anon  
 	         	/static/**/** 		= anon
 	         	
-	         	/shop			   = anon
-	         	/shop/shop_login   = anon
-	         	/shop/process   = anon
-	         	/shop/edit_pwd   = anon
-	         	/shop/find_code   = anon
-	         	/shop/save_pwd   = anon
+	         	
+	         	/shop/login_toLogin   = anon
+	         	/shop/login           = anon
+	         	/shop/toindex           = anon
+	         	/shop/toregister  = anon
+	         	/shop/register   = anon
 	         	/shop/place_order = anon
 	         	
 	         	/tool/go_query  = anon
 	         	/tool/go_car  = anon
 	         	/tool/query_code  = anon
 	         	/tool/query_car  = anon
-	         	/clientUser/index  = anon
-	         	/clientUser/client_list  = anon 
-	         	/clientIndex/news_back  = anon
-	         	/clientUser/driver_list  = anon
-	         	/clientUser/saveDriver  = anon
-	         	clientUser/updateDriver   = anon
-	         	clientUser/updateDriver1   = anon
-	         	clientUser/delDriver        = anon
-	         	/clientIndex/login  = anon
-	         	/clientUser/page_order  = anon
-	         	/clientOrder/order_list  = anon   
-	         	/clientIndex/news_list  = anon
-	         	/clientIndex/news_ByID  = anon
-	         	/clientIndex/picture_list  = anon
-	         	/clientIndex/carousel  = anon
-	         	/clientIndex/touser  = anon
+	         	
+	         	
+	         	/clientUser/*  = anon
 	         	/clientIndex/*  = anon
-	         	/clientOrder/*  = anon 
-	         	/clientUser/*  = anon  
+	         	/clientOrder/*  = anon
 	         	/tologin/**		= anon 
 	           	/**					= authc 
+	           	
+	           	
 				</value>
 			</property>
 		</bean>
@@ -282,14 +260,15 @@
 	<bean id="shiroClientFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
 			<property name="securityManager" ref="securityManager" />
 			
-			 <property name="loginUrl" value="/shop/login_toLogin" /> 
+			 <property name="loginUrl" value="/clientUser/tologin" /> 
 			
-			<property name="successUrl" value="/shop" />
+			<property name="successUrl" value="/clientUser/touser" />
 			
-			<property name="unauthorizedUrl" value="/shop/login_toLogin" />
+			<property name="unauthorizedUrl" value="/clientUser/tologin" />
 			
 			<property name="filterChainDefinitions">
 				<value>
+				/MP_verify_C0sRHMtOzwlLGp4i** =anon
 				/staticphone/**/** 		= anon
 	           	/staticphone/fonts/** 	= anon
 	           	/staticphone/images/** 	= anon
@@ -303,6 +282,7 @@
 				/static/js/** 		= anon
 				/static/shop/assets/**/**		= anon
 	           	/login_login	 	=     anon
+	           	/code.do 			= anon
 	           	 	 <!-- 系统 -->
 	           	/sys	 	=          anon
 	           		 <!-- 系统 -->
@@ -317,7 +297,7 @@
 	           	/appbook/book = anon  
 	         	/static/**/** 		= anon
 	         	
-	         	/shop			   = anon
+	         	/shop/**/**			   = anon
 	         	/shop/shop_login   = anon
 	         	/shop/process   = anon
 	         	/shop/edit_pwd   = anon
@@ -328,29 +308,14 @@
 	         	/tool/go_car  = anon
 	         	/tool/query_code  = anon
 	         	/tool/query_car  = anon
-	         	/clientIndex/index  = anon
-	         	/clientIndex/news_back  = anon
-	         	/clientUser/login  = anon
-	         	/clientUser/page_order  = anon
-	         	/clientUser/driver_list  = anon
-	         	/clientUser/client_list  = anon 
-	         	/clientUser/saveDriver  = anon
-	         	clientUser/updateDriver   = anon
-	         	clientUser/updateDriver1   = anon
-	         	clientUser/delDriver        = anon
-	         	clientUser/logout        = anon
-	         	/clientOrder/order_list  = anon   
-	         	/clientIndex/news_list  = anon
-	         	/clientIndex/news_ByID  = anon
-	         	/clientIndex/picture_list  = anon
-	         	/clientIndex/picture_list  = anon
-	         	/clientIndex/carousel  = anon
-	         	/clientIndex/touser  = anon
+	         	/clientUser/login  = anon 
+	         	/clientUser/tologin  = anon  
 	         	/clientIndex/*  = anon
-	         	/clientOrder/*  = anon 
-	         	/clientUser/*  = anon  
 	         	/tologin/**		= anon 
 	           	/**					= authc 
+	           	
+	           	
+	         	
 				</value>
 			</property>
 		</bean>
